@@ -1,0 +1,40 @@
+:root {
+  --ink-900: #17213a; --ink-800: #26324b; --ink-700: #46546d; --ink-600: #65738b; --ink-500: #8490a4; --ink-400: #a6afbd; --ink-300: #cbd2dc; --ink-200: #e0e5eb; --ink-100: #edf0f4; --ink-50: #f7f9fc;
+  --surface-canvas: #f5f8fd; --surface-default: #ffffff; --surface-muted: #f0f5fb; --surface-border: #e1e8f1;
+  --brand-50: #eaf4ff; --brand-100: #d7ebff; --brand-200: #afd7ff; --brand-300: #78bdff; --brand-400: #369bff; --brand-500: #1677e8; --brand-600: #0d62c4; --brand-700: #084d9e;
+  --teal-DEFAULT: #43e7ad; --teal-soft: #d9faf3; --sidebar-bg: #102b59; --sidebar-bg-soft: #173b72; --navy-500: #255bb1; --navy-700: #173c77; --navy-900: #102650; --navy-900-rgb: 16 38 80;
+  --success-soft: #e8f8ef; --success-DEFAULT: #16995c; --success-text: #087a45; --info-soft: #eaf4ff; --info-DEFAULT: #1677e8; --danger-soft: #fff0ef; --danger-DEFAULT: #e34d4d; --sage-soft: #edf8e6; --sage-bar: #8bcf67; --sage-text: #4c8d31;
+  --radius-sm: 10px; --radius-md: 16px; --radius-lg: 22px; --radius-xl: 28px;
+  --shadow-card: 0 8px 24px rgba(25, 54, 97, .07); --shadow-soft: 0 16px 35px rgba(25, 54, 97, .1); --shadow-panel: 0 24px 70px rgba(16, 43, 89, .17); --shadow-pop: 0 10px 20px -8px rgba(22, 119, 232, .65); --shadow-glow: 0 13px 30px -10px rgba(22, 119, 232, .55);
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+}
+html.dark {
+  --ink-900: #f4f8ff; --ink-800: #dce8fa; --ink-700: #b4c4db; --ink-600: #91a5c1; --ink-500: #7286a3; --ink-400: #566b88; --ink-300: #3c506d; --ink-200: #2b3d58; --ink-100: #1d2c45; --ink-50: #142238;
+  /* Deep navy palette used by the reference cards and dark dashboard. */
+  --surface-canvas: #050f1f; --surface-default: #071426; --surface-muted: #0c1d35; --surface-border: rgba(191, 216, 255, .15);
+  --brand-50: #0f2948; --brand-100: #143760; --brand-200: #1c4d82; --brand-300: #3678bd; --brand-400: #4ba7ff; --brand-500: #2993ff; --brand-600: #5aafff; --brand-700: #9bcfff;
+  --teal-DEFAULT: #43e7ad; --teal-soft: #123f3a;
+  --success-soft: #123f32; --success-DEFAULT: #3ad6bd; --success-text: #79e6b9;
+  --info-soft: #112e50; --info-DEFAULT: #5aafff;
+  --danger-soft: #411f2b; --danger-DEFAULT: #ff94a1;
+  --sage-soft: #203d28; --sage-bar: #8bcf67; --sage-text: #b8e59d;
+  --shadow-card: 0 8px 24px rgba(0,0,0,.32); --shadow-soft: 0 16px 35px rgba(0,0,0,.38); --shadow-panel: 0 24px 70px rgba(0,0,0,.5); --shadow-pop: 0 10px 24px -8px rgba(41,147,255,.5); --shadow-glow: 0 13px 30px -10px rgba(41,147,255,.55);
+}
+
+/* Keep native controls in the same dark palette as the design tokens. */
+html.dark { color-scheme: dark; }
+html.dark input:not([type='checkbox']):not([type='radio']):not([type='file']):not(.bg-transparent),
+html.dark textarea,
+html.dark select {
+  background-color: var(--surface-default) !important;
+  color: var(--ink-900) !important;
+  border-color: var(--surface-border) !important;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder { color: var(--ink-500) !important; }
+html.dark select option { background-color: var(--surface-default); color: var(--ink-900); }
+html.dark input.bg-transparent { background-color: transparent !important; }
+html.dark button.bg-white,
+html.dark a.bg-white,
+html.dark button[class~='bg-white/90'],
+html.dark a[class~='bg-white/90'] { background-color: var(--surface-default) !important; color: var(--ink-900) !important; }

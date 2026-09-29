@@ -1,0 +1,33 @@
+/* Small RTL helpers and LTR-safe utilities */
+
+/* Ensure base direction and text alignment for RTL apps */
+html[dir="rtl"], html[dir="rtl"] body {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Swap margin/padding logical properties for older components */
+.ltr-margin-left { margin-left: 0 !important; }
+.rtl-margin-left { margin-left: 0 !important; }
+
+/* Utility to flip floats if needed */
+.float-start { float: left; }
+.float-end { float: right; }
+
+/* When in RTL, flip float-start/end */
+html[dir="rtl"] .float-start { float: right; }
+html[dir="rtl"] .float-end { float: left; }
+
+/* Icon mirroring helper for directional icons */
+.icon-rtl-flip { transform: scaleX(1); }
+html[dir="rtl"] .icon-rtl-flip { transform: scaleX(-1); }
+
+/* Ensure form controls keep expected layout in RTL */
+.form-row { display: flex; gap: 0.75rem; align-items: center; }
+html[dir="rtl"] .form-row { flex-direction: row-reverse; }
+
+/* Small fix for absolute positioned elements that used left/right explicitly */
+.pos-left { left: 0; right: auto; }
+.pos-right { right: 0; left: auto; }
+html[dir="rtl"] .pos-left { right: 0; left: auto; }
+html[dir="rtl"] .pos-right { left: 0; right: auto; }

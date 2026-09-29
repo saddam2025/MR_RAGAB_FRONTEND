@@ -1,0 +1,77 @@
+// src/mocks/tenantMockData.js
+// Mock data for a single instructor's public-facing tenant homepage/catalog
+// (TenantHomepage.jsx, CourseCatalogPage.jsx).
+
+export const instructorProfile = {
+  id: 'ins-1',
+  name: 'أ. أحمد العتيبي',
+  avatar: '/images/instructors/ahmed.png',
+  tagline: 'مدرس متخصص يقدم محتوى متميز ومتابعة شخصية',
+  bio: 'خبرة أكثر من 12 عامًا في تدريس الرياضيات لجميع المراحل الإعدادية والثانوية.',
+  subject: 'رياضيات',
+  location: 'القاهرة',
+  stagesOffered: ['grade-7', 'grade-8', 'grade-9', 'grade-10', 'grade-11', 'grade-12'],
+  monthlyPrice: 199,
+  perLecturePrice: 15,
+  studentsCount: 1284,
+  coursesCount: 4,
+};
+
+export const catalogCourses = [
+  {
+    id: 'course-101',
+    title: 'أساسيات الجبر',
+    subtitle: 'مراجعة قوية لمفاهيم الجبر الأساسية للمرحلة الإعدادية',
+    image: '/images/courses/algebra.png',
+    stage: 'grade-7',
+    category: 'الشهر الأول',
+    price: 150,
+    lessonsCount: 12,
+    tasksCount: 6,
+    level: 'مبتدئ',
+    levelVariant: 'info',
+    instructor: { name: 'أ. أحمد العتيبي', avatar: '/images/instructors/ahmed.png' },
+  },
+  {
+    id: 'course-201',
+    title: 'الهندسة المبسطة',
+    subtitle: 'أساسيات المساحات والزوايا مع أمثلة تطبيقية',
+    image: '/images/courses/geometry.png',
+    stage: 'grade-8',
+    category: 'الوحدة الثانية',
+    price: 180,
+    lessonsCount: 9,
+    tasksCount: 5,
+    level: 'متوسط',
+    levelVariant: 'success',
+    instructor: { name: 'أ. أحمد العتيبي', avatar: '/images/instructors/ahmed.png' },
+  },
+  {
+    id: 'course-301',
+    title: 'مقدمة في الإحصاء',
+    subtitle: 'تعلم تحليل البيانات والاحتمالات بطريقة سهلة ومباشرة',
+    image: '/images/courses/stats.png',
+    stage: 'grade-9',
+    category: 'الشهر الأول',
+    price: 170,
+    lessonsCount: 14,
+    tasksCount: 7,
+    level: 'متوسط',
+    levelVariant: 'brand',
+    instructor: { name: 'أ. أحمد العتيبي', avatar: '/images/instructors/ahmed.png' },
+  },
+  {
+    id: 'course-401',
+    title: 'التفاضل والتكامل',
+    subtitle: 'القاعدة الأساسية لتفاضل الدوال وتطبيقاتها العملية',
+    image: '/images/courses/calculus.png',
+    stage: 'grade-11',
+    category: 'الوحدة الثالثة',
+    price: 220,
+    lessonsCount: 16,
+    tasksCount: 8,
+    level: 'متقدم',
+    levelVariant: 'danger',
+    instructor: { name: 'أ. أحمد العتيبي', avatar: '/images/instructors/ahmed.png' },
+  }
+];

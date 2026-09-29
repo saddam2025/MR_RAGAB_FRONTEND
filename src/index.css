@@ -1,0 +1,355 @@
+/* Import design tokens and RTL helpers */
+@import './styles/tokens.css';
+@import './styles/rtl-fixes.css';
+
+/* Arabic-first professional typeface. "basthalak" removed per instruction —
+   Cairo has excellent Arabic + Latin coverage and a wide weight range. */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+
+/* Tailwind base + components + utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* RTL and base typography */
+html {
+  direction: rtl;
+  font-family: "Cairo", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--surface-canvas);
+  color: var(--ink-900);
+  transition: background-color 0.3s ease-soft, color 0.3s ease-soft;
+}
+
+/* Material Symbols baseline — required for the FILL-variation active/inactive
+   icon trick used throughout the sidebar, navbar, and buttons. Load the
+   actual font via <link> in index.html:
+   https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Body reset */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--surface-canvas);
+  line-height: 1.5;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+/* Card */
+.card {
+  background: var(--surface-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--surface-border);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-primary {
+  background: var(--brand-500);
+  color: var(--ink-900);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-700);
+  border: 1px solid var(--surface-border);
+}
+
+/* Inputs */
+.input {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-default);
+  color: var(--ink-700);
+}
+/* Focus glow — matches the reference's .input-focus-glow/.input-field
+   pattern, using var(--brand-500)/var(--shadow-glow) so it turns teal in
+   dark mode automatically instead of staying hardcoded gold. */
+.input:focus {
+  outline: none;
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 2px var(--brand-500), var(--shadow-glow);
+  transition: all 0.2s ease;
+}
+
+/* Navbar */
+.navbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-inline: 1rem;
+}
+
+/* Small responsive tweaks */
+@media (max-width: 1024px) {
+  .container { padding-inline: 0.75rem; }
+}
+
+/* Course-editor lecture rows use the same compact card treatment as course
+   management while retaining their existing action buttons and handlers. */
+section.bg-surface-default.shadow-card > div.space-y-2 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+section.bg-surface-default.shadow-card > div.space-y-2 > article {
+  min-height: 9rem;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 1.5rem;
+  background: var(--surface-default);
+  box-shadow: var(--shadow-card);
+  padding: 1rem;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+section.bg-surface-default.shadow-card > div.space-y-2 > article:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+section.bg-surface-default.shadow-card > div.space-y-2 > article > div:last-child {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+@media (min-width: 640px) {
+  section.bg-surface-default.shadow-card > div.space-y-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  section.bg-surface-default.shadow-card > div.space-y-2 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn .25s cubic-bezier(.4,0,.2,1) both;
+}
+
+/* Text-only anti-piracy watermark: a steady path across the entire player
+   keeps it visible over both native video and Bunny's embedded player. */
+@keyframes videoWatermarkTravel {
+  0% { top: 10%; left: 8%; }
+  25% { top: 16%; left: 72%; }
+  50% { top: 74%; left: 68%; }
+  75% { top: 66%; left: 10%; }
+  100% { top: 38%; left: 44%; }
+}
+.video-watermark {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, .72);
+  font-size: clamp(.7rem, 1.4vw, 1rem);
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .85);
+  transform: translate(-50%, -50%);
+  animation: videoWatermarkTravel 28s linear infinite alternate;
+}
+.video-player-frame:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  display: grid;
+  place-items: center;
+}
+.video-player-frame:fullscreen video,
+.video-player-frame:fullscreen iframe {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+}
+.video-fullscreen-button {
+  position: absolute;
+  z-index: 20;
+  top: .75rem;
+  left: .75rem;
+  border: 1px solid rgba(255, 255, 255, .55);
+  border-radius: .6rem;
+  padding: .4rem .65rem;
+  background: rgba(0, 0, 0, .42);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+}
+.video-fullscreen-button:hover { background: rgba(0, 0, 0, .68); }
+.video-mobile-fullscreen-control { display: none; }
+
+/* Safari on iPhone does not support element fullscreen for this cross-origin
+   Bunny iframe. This page-level mode preserves the watermark layer. */
+/* The class is added by JavaScript only on phone-sized viewports. Keeping it
+   outside a CSS media query prevents an embedded/mobile browser's scaled
+   layout viewport from leaving the site navbar visible. */
+.video-player-frame.video-mobile-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647;
+  width: 100vw !important;
+  height: 100dvh !important;
+  aspect-ratio: auto;
+  border-radius: 0;
+  display: grid;
+  place-items: center;
+}
+.video-player-frame.video-mobile-fullscreen iframe,
+.video-player-frame.video-mobile-fullscreen video {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+}
+/* Sits above Bunny's bottom-right fullscreen icon and routes the tap to
+   the safe page-level mode instead of iframe-native fullscreen. */
+.video-mobile-fullscreen-control {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  z-index: 30;
+  right: .35rem;
+  bottom: .35rem;
+  width: 2.7rem;
+  height: 2.7rem;
+  border: 0;
+  border-radius: .45rem;
+  background: rgba(0, 0, 0, .42);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* Keep sidebar content scrollable without showing a browser-specific track. */
+.sidebar-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.sidebar-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Landing page: its marketing sections use image-oriented light surfaces in
+   light mode, so explicitly map those surfaces back to the shared tokens
+   when the global theme switches to dark. */
+html.dark .landing-page {
+  background: var(--surface-canvas) !important;
+  color: var(--ink-900);
+}
+html.dark .landing-page .landing-light-section,
+html.dark .landing-page .landing-light-section [class*="bg-white"] {
+  background-color: var(--surface-default) !important;
+}
+html.dark .landing-page .landing-light-section [class*="bg-[#eaf5ff]"],
+html.dark .landing-page .landing-light-section [class*="bg-[#f5f9ff]"] {
+  background-color: var(--surface-muted) !important;
+}
+html.dark .landing-page .landing-light-section [class*="text-[#"] {
+  color: var(--ink-700) !important;
+}
+html.dark .landing-page .landing-light-section h2,
+html.dark .landing-page .landing-light-section h3 {
+  color: var(--ink-900);
+}
+html.dark .landing-page .landing-dark-section article {
+  background-color: var(--surface-default) !important;
+  color: var(--ink-900) !important;
+}
+html.dark .landing-page .landing-dark-section article [class*="text-[#"] {
+  color: var(--ink-700) !important;
+}
+
+/* ============================================================
+   MOTION DESIGN SYSTEM — matches the provided reference exactly.
+   Card lift, button scale, and color transitions are applied as plain
+   Tailwind utility combinations directly on elements (per the reference's
+   own methodology), not wrapped in custom classes here. Only the two
+   effects that need real custom box-shadow values get dedicated classes:
+
+   1. Primary/CTA buttons — apply `.glow-button` (Button.jsx's
+      variant="primary" already includes this).
+   2. Floating decorative icons — use Tailwind's built-in bounce keyframe
+      directly: animate-[bounce_4s_infinite] / animate-[bounce_5s_infinite_0.5s]
+   3. Clickable cards — apply: hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-md
+   4. Regular buttons — apply: hover:scale-[1.02] active:scale-95 transition-all duration-300
+   5. Arrow-slide (e.g. logout link) — wrap in a `group`, then on the icon:
+      group-hover:-translate-x-1 transition-transform
+   6. Any link/icon color change — apply: transition-colors duration-300
+   ============================================================ */
+.glow-button {
+  box-shadow: var(--shadow-pop);
+  transition: all 0.3s ease;
+}
+.glow-button:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-glow);
+}
+.glow-button:active {
+  transform: scale(0.95);
+}
+
+/* Glassmorphism — used for stat cards / decorative panels per the reference's
+   .glass-card / .glass-panel pattern. */
+.glass-card {
+  background: color-mix(in srgb, var(--surface-default) 70%, transparent);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--surface-border);
+}
+
+/* Login page decorations */
+.login-left-panel {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--brand-700) 85%, black 10%), var(--brand-800));
+  color: var(--surface-on-brand, #fff);
+}
+
+.dots-bg {
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 14px 14px;
+  color: rgba(var(--ink-900-rgb, 0 0 0) / 0.04);
+}
+
+@media (max-width: 1024px) {
+  .login-left-panel { display: none; }
+}
