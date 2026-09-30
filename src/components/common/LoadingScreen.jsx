@@ -16,8 +16,8 @@ export default function LoadingScreen() {
           />
           <div aria-hidden="true" className="absolute inset-5 rounded-full border border-white/5" />
           <img
-            src="/assets/brand/attia-logo-transparent.png"
-            alt="منصة مستر عطية كامل"
+            src="/assets/brand/ragab-logo.png"
+            alt="منصة مستر رجب صديق"
             className="relative z-10 max-h-28 w-40 object-contain drop-shadow-[0_0_24px_rgba(22,133,248,0.2)] sm:w-48"
           />
         </div>

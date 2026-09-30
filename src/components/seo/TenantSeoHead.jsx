@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
-const DEFAULT_TITLE = 'Mr Attia Kamel';
-const DEFAULT_DESCRIPTION = 'Mr Attia Kamel - منصة تعليم الرياضيات';
+const DEFAULT_TITLE = 'Mr Ragab Seddik';
+const DEFAULT_DESCRIPTION = 'منصة مستر رجب صديق لتعليم اللغة الإنجليزية. خبرة تزيد عن 20 عامًا في التدريس. شرح مبسط للقواعد والمحادثة والقراءة والكتابة، مع محاضرات واختبارات ومتابعة مستمرة للطلاب.';
 
 function upsertMeta(attribute, key, content) {
   let element = document.head.querySelector(`meta[${attribute}="${key}"]`);
@@ -20,11 +20,11 @@ export default function TenantSeoHead({ tenant, tenantId }) {
   useEffect(() => {
     if (!tenant?.name || !tenantId) return undefined;
 
-    const name = 'Mr Attia Kamel';
+    const name = 'Mr Ragab Seddik';
     const title = DEFAULT_TITLE;
-    const description = `منصة ${name} لتعليم الرياضيات للمرحلتين الإعدادية والثانوية، بخبرة 20 سنة في التدريس. محاضرات، واجبات، اختبارات شهرية، ومتابعة مستمرة لمستوى كل طالب.`;
+    const description = `منصة مستر رجب صديق لتعليم اللغة الإنجليزية. خبرة تزيد عن 20 عامًا في التدريس. شرح مبسط للقواعد والمحادثة والقراءة والكتابة، مع محاضرات واختبارات ومتابعة مستمرة للطلاب.`;
     const url = new URL(`/${encodeURIComponent(tenantId)}`, window.location.origin).href;
-    const image = '/assets/brand/attia-logo.png';
+    const image = '/assets/brand/ragab-logo.png';
     const imageUrl = image ? new URL(image, window.location.origin).href : '';
 
     document.title = title;
