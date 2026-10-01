@@ -1,0 +1,173 @@
+.ragab-intro__art {
+  --hero-glow: color-mix(in srgb, var(--brand-500), transparent 86%);
+  --lm-stone: #efe3c2;
+  --lm-stone-shadow: #d9c596;
+  --lm-roof: #4a5a6a;
+  --lm-metal: #2b78b8;
+  --lm-gold: #c8a227;
+  --lm-red: #b7312c;
+  --lm-dial: #fbf6e8;
+  --deco-opacity: .85;
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  min-height: clamp(360px, 38vw, 560px);
+  aspect-ratio: 1.12 / 1;
+  margin-inline: auto;
+  isolation: isolate;
+}
+
+html.dark .ragab-intro__art {
+  --hero-glow: color-mix(in srgb, var(--brand-500), transparent 70%);
+  --lm-stone: #d9cba0;
+  --lm-stone-shadow: #93875f;
+  --lm-roof: #323f52;
+  --lm-metal: #3b9ac4;
+  --lm-gold: #e0b94a;
+  --lm-red: #d1453f;
+  --lm-dial: #efe6cf;
+  --deco-opacity: .78;
+}
+
+.ragab-intro__glow {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: radial-gradient(60% 55% at 50% 45%, var(--hero-glow), transparent 72%);
+  pointer-events: none;
+}
+
+.ragab-intro__landmark {
+  position: absolute;
+  will-change: transform;
+}
+
+.ragab-intro__landmark--bridge {
+  z-index: 2;
+  right: -1%;
+  bottom: 8%;
+  width: 62%;
+  aspect-ratio: 980 / 500;
+}
+
+.ragab-intro__landmark--big-ben {
+  z-index: 2;
+  left: 15%;
+  bottom: 1%;
+  width: 22%;
+  height: 80%;
+}
+
+.ragab-intro__person {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: 0;
+  translate: -50% 0;
+  width: 66%;
+  height: 98%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.ragab-intro__person-image {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 12px 20px rgb(0 0 0 / 24%));
+}
+
+.ragab-intro__art .london-decorations { z-index: 1; }
+.ragab-intro__art .london-decorations__ambient { z-index: 0; }
+.ragab-intro__art .london-decorations__foreground { z-index: 1; }
+.ragab-intro__art .deco--cloud,
+.ragab-intro__art .deco--birds { z-index: 0; }
+.ragab-intro__art .london-deco { opacity: var(--deco-opacity); }
+.ragab-intro__art .deco--cloud { opacity: .36; }
+.ragab-intro__art .deco--birds { opacity: .2; }
+.ragab-intro__art .deco--letters { top: 16% !important; left: 27% !important; }
+.ragab-intro__art .deco--flag { top: 3% !important; left: 25% !important; }
+.ragab-intro__art .deco--book { left: 5% !important; }
+.ragab-intro__art .deco--bus { left: 58% !important; top: 61% !important; }
+.ragab-intro__art .deco--booth { left: 18% !important; }
+.ragab-intro__art .deco--postbox { left: 86% !important; }
+.ragab-intro__art.geometric-hero--visible .hero-float { animation-play-state: running; }
+.ragab-intro__art:not(.geometric-hero--visible) .hero-float { animation-play-state: paused; }
+
+.ragab-intro__copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  color: white;
+  text-align: start;
+}
+
+.ragab-intro__badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand-500), transparent 82%);
+  padding: .45rem 1rem;
+  color: var(--brand-200);
+  font-size: .9rem;
+  font-weight: 700;
+}
+
+.ragab-intro__title {
+  display: grid;
+  gap: .1em;
+  margin: 1rem 0 1.5rem;
+  color: white;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.24;
+}
+
+.ragab-intro__title span:last-child { color: var(--brand-400); }
+.ragab-intro__paragraphs { display: grid; gap: 1rem; color: rgb(255 255 255 / 78%); font-size: 1rem; font-weight: 400; line-height: 1.95; }
+.ragab-intro__paragraphs p { margin: 0; }
+
+.ragab-intro__quote {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  margin: 1.75rem 0 0;
+  border: 1px solid color-mix(in srgb, var(--brand-500), transparent 68%);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--brand-500), transparent 92%);
+  padding: 1rem;
+  color: white;
+}
+
+.ragab-intro__quote svg { flex: none; color: var(--brand-400); }
+.ragab-intro__quote p { margin: 0; font-size: .98rem; font-weight: 600; line-height: 1.8; }
+.ragab-intro__signature { margin: 1rem 0 0; color: var(--brand-300); font-size: 1rem; font-weight: 800; }
+.ragab-intro__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+
+@media (max-width: 1023px) {
+  .ragab-intro__art { order: 0; }
+  .ragab-intro__copy { order: 1; }
+}
+
+@media (max-width: 640px) {
+  .ragab-intro__art { min-height: 360px; width: min(100%, 500px); }
+  .ragab-intro__landmark--bridge { right: -5%; bottom: 11%; width: 66%; }
+  .ragab-intro__landmark--big-ben { left: 12%; width: 25%; height: 78%; }
+  .ragab-intro__person { width: 72%; height: 96%; }
+  .ragab-intro__art .deco--cloud,
+  .ragab-intro__art .deco--birds,
+  .ragab-intro__art .deco--bus { display: none; }
+  .ragab-intro__art .deco--book { left: 4% !important; top: 76% !important; }
+  .ragab-intro__art .deco--booth { left: 17% !important; top: 82% !important; }
+  .ragab-intro__art .deco--postbox { left: 87% !important; top: 82% !important; }
+  .ragab-intro__copy { text-align: right; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ragab-intro__art .hero-float { animation: none !important; }
+}

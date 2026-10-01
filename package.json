@@ -7,11 +7,13 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
+    "test:translator": "node --test src/features/translator/translator.test.js",
     "preview": "vite preview",
     "check:routes": "node scripts/check-routes.js"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@huggingface/transformers": "^3.8.1",
     "axios": "^1.18.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",

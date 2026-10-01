@@ -18,7 +18,6 @@ export default function Layouts() {
   const location = useLocation();
   const { user } = useAuth() || {};
   const showSidebar = Boolean(user);
-  const isTenantHomepage = Boolean(useMatch({ path: '/:instructorId', end: true }));
   const isTenantLoginPage = Boolean(useMatch({ path: '/:instructorId/login', end: true }));
   const isTenantRegisterPage = Boolean(useMatch({ path: '/:instructorId/register', end: true }));
   const isTenantAuthPage = isTenantLoginPage || isTenantRegisterPage;
@@ -41,7 +40,7 @@ export default function Layouts() {
       )}
 
       <div className={clsx('flex-1 min-w-0 flex flex-col', showSidebar && 'lg:mr-72')}>
-        {!isTenantAuthPage && <Navbar sidebarOpen={mobileSidebarOpen} onToggleSidebar={showSidebar ? toggleMobileSidebar : undefined} sticky={isTenantHomepage} />}
+        {!isTenantAuthPage && <Navbar sidebarOpen={mobileSidebarOpen} onToggleSidebar={showSidebar ? toggleMobileSidebar : undefined} sticky sidebarOffset={showSidebar} />}
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 animate-fadeIn">
           <Outlet />

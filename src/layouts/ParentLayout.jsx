@@ -26,7 +26,7 @@ export default function ParentLayout() {
       </aside>
 
       <div className="flex-1 min-w-0 lg:mr-72 flex flex-col">
-        <Navbar sidebarOpen={mobileSidebarOpen} onToggleSidebar={toggleMobileSidebar} />
+        <Navbar sidebarOpen={mobileSidebarOpen} onToggleSidebar={toggleMobileSidebar} sticky sidebarOffset />
 
         <main className="flex-1 p-6 lg:p-8 animate-fadeIn">
           <Outlet />

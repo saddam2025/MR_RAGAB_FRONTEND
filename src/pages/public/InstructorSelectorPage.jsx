@@ -7,9 +7,11 @@ import Button from '../../components/ui/Button';
 import Footer from '../../components/common/Footer';
 import CourseCard from '../../components/common/CourseCard';
 import GeometricHero from '../../components/hero/GeometricHero';
+import AlMustasharIntroduction from '../../components/hero/AlMustasharIntroduction';
 import { landingAssets, landingFeatures } from '../../mocks/landingMockData';
 import Navbar from '../../layouts/Navbar';
 import instructorService from '../../services/instructorService';
+import Translator from '../../features/translator/Translator.jsx';
 
 const valuePoints = [
   ['محتوى مرتب', 'كل حاجة قدامك بشكل واضح عشان تركز في اللي يهمك.'],
@@ -67,20 +69,12 @@ export default function InstructorSelectorPage() {
     <div className="landing-page min-h-screen overflow-x-hidden bg-[#f5f9ff] text-[#102650]" dir="rtl">
       <div className="bg-[#0c254a] px-3 pb-14 sm:px-6 lg:px-10">
         <Navbar sticky />
-        <section className="mx-auto grid max-w-7xl items-center gap-10 px-3 pb-6 pt-16 lg:grid-cols-2 lg:px-8 lg:pb-14 lg:pt-24">
-          <div className="text-right">
-            <span className="inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-[#b7e5ff]">تجربتك التعليمية من مكان واحد</span>
-            <h1 className="mt-6 max-w-xl text-4xl font-extrabold leading-[1.28] text-white sm:text-5xl lg:text-6xl">اتعلّم بطريقتك <span className="text-[#9fe4ff]">ووصل لهدفك</span></h1>
-            <p className="mt-6 max-w-xl text-base leading-8 text-white/80 sm:text-lg">معانا هتلاقي المحتوى اللي محتاجه، وتقدر تتابع مستواك خطوة بخطوة من مكان واحد.</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" onClick={() => navigate('/register')}>ابدأ دلوقتي</Button>
-              <Button variant="ghost" size="lg" className="!bg-white/10 !text-white hover:!bg-white/20" onClick={scrollToTeachers}>شوف المحتوى</Button>
-            </div>
-          </div>
-          <div className="relative rounded-[2rem] bg-white p-3 shadow-[0_25px_60px_rgba(0,0,0,.2)]">
-            <img src={landingAssets.hero} alt="تجربة تعليمية منظمة" className="h-auto w-full rounded-[1.5rem] object-contain" />
-            <div className="absolute -bottom-4 -right-3 rounded-2xl bg-[#43e7ad] px-4 py-3 text-sm font-extrabold text-[#102650] shadow-lg">تابع مستواك بسهولة</div>
-          </div>
+        <section className="mx-auto max-w-7xl px-3 pb-6 pt-10 lg:px-8 lg:pb-14 lg:pt-14">
+          <AlMustasharIntroduction
+            showActions
+            onStart={() => navigate('/register')}
+            onContent={scrollToTeachers}
+          />
         </section>
       </div>
 
@@ -127,6 +121,10 @@ export default function InstructorSelectorPage() {
               <img src={landingAssets.why} alt="مميزات تساعدك في التعلم" className="w-full rounded-[1.5rem] object-contain" />
             </div>
           </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8" aria-label="المترجم والقاموس الناطق">
+          <Translator variant="compact" />
         </section>
 
         <section className="landing-light-section mx-auto max-w-7xl px-5 py-20 lg:px-8">

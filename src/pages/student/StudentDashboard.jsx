@@ -14,6 +14,7 @@ import Avatar from '../../components/ui/Avatar';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import api from '../../services/api';
+import Translator from '../../features/translator/Translator.jsx';
 
 export default function StudentDashboard() {
   const { instructorId } = useParams();
@@ -69,6 +70,8 @@ export default function StudentDashboard() {
         <div className="mb-5 flex items-end justify-between gap-4"><div><p className="text-sm font-semibold text-brand-600">تابع تقدّمك</p><h2 className="mt-1 text-xl font-extrabold text-ink-900">كورساتي</h2></div><Button variant="subtle" size="sm" onClick={() => navigate(`/${instructorId}/catalog`)}>استكشف الكورسات</Button></div>
         {coursesLoading ? <div className="rounded-2xl bg-surface-muted p-6 text-center text-sm text-ink-500">جارٍ تحميل كورساتي...</div> : enrolledCourses.length === 0 ? <div className="rounded-2xl bg-surface-muted p-6 text-center text-sm text-ink-500">لا توجد كورسات في قائمتك حتى الآن.</div> : <div className="grid gap-3 sm:grid-cols-2">{enrolledCourses.map(({ course, expiresAt, viewsRemaining, includedWithCourse, fullAccess, partialLectureCount }) => <button type="button" key={course._id} onClick={() => navigate(`/${instructorId}/courses/${course._id}`)} className="rounded-2xl border border-surface-border bg-surface-canvas p-4 text-right transition hover:border-brand-400"><p className="font-bold text-ink-900">{course.title_ar || course.title_en}</p><p className="mt-1 text-sm text-ink-500">{course.lectureCount || 0} محاضرة · {course.price ?? 0} ج.م</p><p className="mt-1 text-xs text-ink-500">{fullAccess || includedWithCourse ? 'يشمل كل المحاضرات' : `لديك وصول إلى ${partialLectureCount || 1} محاضرة`} · متاح حتى {new Date(expiresAt).toLocaleDateString('ar-EG')}</p></button>)}</div>}
       </section>
+
+      <Translator variant="compact" />
 
       {/* Parent access code */}
       <section id="parent-access-code" className="bg-surface-default rounded-2xl shadow-card p-6 scroll-mt-24">

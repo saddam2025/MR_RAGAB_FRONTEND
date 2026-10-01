@@ -102,6 +102,13 @@ function SidebarIcon({ name }) {
           <path d="M5 20c0-3 2-5 5-5s5 2 5 5M15 17c0-2.5 2-4.5 4.5-4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
       );
+    case 'translate':
+      return (
+        <svg viewBox="0 0 24 24" fill="none" className={shared} aria-hidden="true">
+          <path d="M4 5h9M8.5 3v2m-3 2c.7 2.2 2.4 4.1 5.5 5.5M11.5 7c-.7 2.2-2.4 4.1-5.5 5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M13 20l4-10 4 10m-6.5-3h5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
     default:
       return (
         <svg viewBox="0 0 24 24" fill="none" className={shared} aria-hidden="true">
@@ -294,6 +301,7 @@ export default function Sidebar() {
         <Item to={`${base}/dashboard`} icon="dashboard" activeWhen={({ pathname, hash }) => pathname === `${base}/dashboard` && hash !== '#parent-access-code' && hash !== '#current-courses'}>لوحة التحكم</Item>
         <Item to={`${base}/catalog`} icon="menu_book">الكورسات</Item>
         <Item to={`${base}/dashboard#current-courses`} icon="menu_book" activeWhen={({ pathname, hash }) => pathname === `${base}/dashboard` && hash === '#current-courses'}>كورساتي</Item>
+        <Item to={`${base}/translator`} icon="translate">المترجم الناطق</Item>
         <Item to={`${base}/wallet`} icon="vpn_key">محفظتي</Item>
         <Item to={`${base}/reels`} icon="menu_book">الريلز</Item>
         <Item to={`${base}/leaderboard`} icon="military_tech">لوحة الشرف</Item>

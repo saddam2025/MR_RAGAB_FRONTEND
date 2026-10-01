@@ -14,6 +14,7 @@ import { useAuth } from '../../hooks/useAuth';
 import instructorService from '../../services/instructorService';
 import standaloneExamService from '../../services/standaloneExamService';
 import { egyptianWhatsappUrl } from '../../utils/phone';
+import AlMustasharIntroduction from '../../components/hero/AlMustasharIntroduction.jsx';
 
 export default function TenantHomepage() {
   const { instructorId } = useParams();
@@ -70,13 +71,14 @@ export default function TenantHomepage() {
   // displaying a misleading zero.
   const stagesCount = instructorProfile.stagesOffered.length || 6;
   const supportHref = egyptianWhatsappUrl(instructorProfile.supportPhone || '201060369537');
+  const isRagabTenant = /ragab|رجب/i.test(`${instructorProfile.name || ''} ${instructorId || ''}`);
 
   return (
     <div className="space-y-10">
       <section className="relative overflow-hidden rounded-[var(--radius-xl)] bg-navy-900 shadow-panel">
         <div className="absolute -left-20 -top-24 h-72 w-72 rounded-full bg-brand-400/30 blur-3xl" />
         <div className="absolute -bottom-20 right-1/3 h-52 w-52 rounded-full bg-teal-DEFAULT/20 blur-3xl" />
-        <div className="relative grid items-center gap-8 px-6 py-8 lg:grid-cols-[1.4fr_1fr] lg:px-10 lg:py-11">
+        {isRagabTenant ? <AlMustasharIntroduction /> : <div className="relative grid items-center gap-8 px-6 py-8 lg:grid-cols-[1.4fr_1fr] lg:px-10 lg:py-11">
           <div className="space-y-6">
             <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-brand-100 ring-1 ring-white/15">
               ✦ منصة {instructorProfile.subject || instructorProfile.name}
@@ -148,7 +150,7 @@ export default function TenantHomepage() {
               </div>}
             </div>
           </div>
-        </div>
+        </div>}
       </section>
 
       {suggestedCourses.length > 0 && <section className="rounded-[var(--radius-xl)] border border-surface-border bg-surface-default p-6 shadow-card">

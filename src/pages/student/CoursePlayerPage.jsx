@@ -15,6 +15,7 @@ import Button from '../../components/ui/Button';
 import { useAuth } from '../../hooks/useAuth';
 import api, { resolveApiAssetUrl } from '../../services/api';
 import quizService from '../../services/quizService';
+import Translator from '../../features/translator/Translator.jsx';
 
 export default function CoursePlayerPage() {
   const { instructorId, courseId, lectureId } = useParams();
@@ -268,6 +269,9 @@ export default function CoursePlayerPage() {
               <p className="text-sm font-bold text-ink-900">الامتحان</p>
               {quizId ? <><p className="mt-2 text-sm text-ink-600">اختبار المحاضرة جاهز. تأكد من فهم الدرس قبل البدء.</p><Button className="mt-4" size="sm" variant="primary" onClick={() => navigate(quizSubmission ? `/${instructorId}/exam-grades` : `/${instructorId}/courses/${courseId}/quizzes/${quizId}`)}>{quizSubmission ? 'شوف درجتك' : 'بدء الامتحان'}</Button></> : <p className="mt-2 text-sm text-ink-500">الامتحان لسه منزلش.</p>}
             </article>
+          </div>
+          <div className="mt-6">
+            <Translator variant="compact" />
           </div>
           <div className="mt-5">
             <Button variant="ghost" onClick={() => { window.location.href = 'mailto:support@riyadiaty.example.com'; }}>
