@@ -12,7 +12,7 @@ export default function AlMustasharIntroduction({ showActions = false, onStart, 
   const artRef = useRef(null);
   useHeroParallax(artRef);
 
-  return <div className="relative grid items-center gap-8 px-6 py-8 lg:grid-cols-[1.05fr_.95fr] lg:gap-12 lg:px-10 lg:py-11" dir="ltr">
+  return <div className="ragab-intro relative grid min-w-0 items-center gap-8 px-4 py-5 sm:px-6 sm:py-8 lg:grid-cols-[1.05fr_.95fr] lg:gap-12 lg:px-10 lg:py-11" dir="ltr">
     <div ref={artRef} className="ragab-intro__art" dir="ltr" aria-label="معالم لندن وزخارف تعليمية باللغة الإنجليزية">
       <div className="ragab-intro__glow" aria-hidden="true" />
       <LondonDecorations />
