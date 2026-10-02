@@ -32,8 +32,6 @@ export default function Translator({ variant = 'full', className = '' }) {
   const [slowSpeech, setSlowSpeech] = useState(false);
   const [speechMessage, setSpeechMessage] = useState('');
   const [wordDetails, setWordDetails] = useState(null);
-  const [preloadState, setPreloadState] = useState('waiting');
-  const [preloadProgress, setPreloadProgress] = useState(null);
 
   const direction = getTranslationDirection(input, directionOverride);
   const labels = directionLabels[direction];
@@ -48,32 +46,6 @@ export default function Translator({ variant = 'full', className = '' }) {
   useEffect(() => () => {
     clientRef.current?.terminate();
     audioRef.current?.pause?.();
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-    let started = false;
-    const startPreload = () => {
-      if (started) return;
-      started = true;
-      setPreloadState('loading');
-      clientRef.current.preload(setPreloadProgress)
-        .then(() => { if (active) setPreloadState('ready'); })
-        .catch(() => { if (active) setPreloadState('error'); });
-    };
-    const node = sectionRef.current;
-    if (!node || !('IntersectionObserver' in window)) {
-      startPreload();
-      return () => { active = false; };
-    }
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
-        startPreload();
-        observer.disconnect();
-      }
-    }, { rootMargin: '240px 0px' });
-    observer.observe(node);
-    return () => { active = false; observer.disconnect(); };
   }, []);
 
   useEffect(() => {
@@ -187,11 +159,7 @@ export default function Translator({ variant = 'full', className = '' }) {
 
         <form onSubmit={translate} className={`order-2 rounded-[1.75rem] border p-4 sm:p-5 ${isCompact ? 'border-white/10 bg-[#111927] lg:order-2' : 'border-surface-border bg-surface-muted/70 lg:order-2'}`}>
           {isCompact && <div className="mb-3" role="status" aria-live="polite">
-            <div className="mb-1 flex items-center justify-between gap-2 text-[11px] text-white/65">
-              <span>{preloadState === 'ready' ? 'المترجم جاهز للاستخدام' : preloadState === 'loading' ? 'جاري تجهيز المترجم تلقائيًا للغتين' : preloadState === 'error' ? 'سيكتمل التحميل عند أول ترجمة' : 'سيبدأ التجهيز تلقائيًا عند ظهور القسم'}</span>
-              {preloadState === 'loading' && typeof preloadProgress?.progress === 'number' && <span>{Math.round(friendlyProgress(preloadProgress) || 0)}%</span>}
-            </div>
-            {preloadState === 'loading' && <div className="h-1.5 overflow-hidden rounded-full bg-white/10"><div className={`h-full rounded-full bg-[#2164ff] transition-all ${typeof preloadProgress?.progress === 'number' ? '' : 'w-2/5 animate-pulse'}`} style={typeof preloadProgress?.progress === 'number' ? { width: `${friendlyProgress(preloadProgress)}%` } : undefined} /></div>}
+            <p className="text-[11px] text-white/65">هيتم تحميل نموذج اللغة المطلوبة عند أول ترجمة لتقليل استهلاك الذاكرة.</p>
           </div>}
           <div className="mb-4 flex items-center justify-between gap-3">
               <span className={`text-[11px] font-semibold uppercase tracking-[.16em] sm:text-xs ${isCompact ? 'text-white/55' : 'text-ink-500'}`}>Speaking Dictionary</span>

@@ -7,7 +7,8 @@ env.useBrowserCache = true;
 env.backends.onnx.wasm.numThreads = 1;
 env.backends.onnx.wasm.wasmPaths = { mjs: wasmModuleUrl, wasm: wasmBinaryUrl };
 
-const pipelines = new Map();
+let activeDirection = null;
+let activePipelinePromise = null;
 let runtimeReady = null;
 
 async function prepareRuntime() {
@@ -38,35 +39,49 @@ async function prepareRuntime() {
 }
 
 async function getPipeline(direction, id) {
-  if (!pipelines.has(direction)) {
-    if (typeof WebAssembly === 'undefined') throw new Error('WEBASSEMBLY_UNAVAILABLE');
-    const task = pipeline('translation', TRANSLATION_MODELS[direction], {
-      dtype: 'q8',
-      progress_callback: (progress) => self.postMessage({ id, type: 'progress', progress }),
-    });
-    pipelines.set(direction, task);
-    task.catch(() => pipelines.delete(direction));
+  if (activeDirection === direction && activePipelinePromise) return activePipelinePromise;
+
+  if (activePipelinePromise) {
+    const previousPipeline = await activePipelinePromise.catch(() => null);
+    try { await previousPipeline?.dispose?.(); } catch { /* Continue with the newly requested direction. */ }
+    activePipelinePromise = null;
+    activeDirection = null;
   }
-  return pipelines.get(direction);
+
+  if (typeof WebAssembly === 'undefined') throw new Error('WEBASSEMBLY_UNAVAILABLE');
+  activeDirection = direction;
+  const task = pipeline('translation', TRANSLATION_MODELS[direction], {
+    dtype: 'q8',
+    progress_callback: (progress) => self.postMessage({ id, type: 'progress', progress }),
+  });
+  activePipelinePromise = task;
+  try {
+    return await task;
+  } catch (error) {
+    if (activeDirection === direction) {
+      activePipelinePromise = null;
+      activeDirection = null;
+    }
+    throw error;
+  }
 }
 
-self.addEventListener('message', async ({ data }) => {
+async function handleMessage(data) {
   if (!['translate', 'preload'].includes(data?.type)) return;
+  if (data.type === 'preload') {
+    // Keep compatibility with older clients without loading either model
+    // before the student asks for a translation.
+    self.postMessage({ id: data.id, type: 'result', text: '' });
+    return;
+  }
+
   try {
     if (typeof WebAssembly === 'undefined') throw new Error('WEBASSEMBLY_UNAVAILABLE');
     await prepareRuntime();
-    if (data.type === 'preload') {
-      for (const direction of data.directions || []) {
-        if (!TRANSLATION_MODELS[direction]) throw new Error('اتجاه الترجمة غير مدعوم.');
-        await getPipeline(direction, data.id);
-      }
-      self.postMessage({ id: data.id, type: 'result', text: '' });
-    } else {
-      if (!TRANSLATION_MODELS[data.direction]) throw new Error('اتجاه الترجمة غير مدعوم.');
-      const translator = await getPipeline(data.direction, data.id);
-      const result = await translator(data.text, { max_new_tokens: 160 });
-      self.postMessage({ id: data.id, type: 'result', text: result?.[0]?.translation_text || '' });
-    }
+    if (!TRANSLATION_MODELS[data.direction]) throw new Error('اتجاه الترجمة غير مدعوم.');
+    const translator = await getPipeline(data.direction, data.id);
+    const result = await translator(data.text, { max_new_tokens: 160 });
+    self.postMessage({ id: data.id, type: 'result', text: result?.[0]?.translation_text || '' });
   } catch (error) {
     const rawMessage = error?.message || '';
     const message = rawMessage === 'WEBASSEMBLY_UNAVAILABLE'
@@ -78,4 +93,9 @@ self.addEventListener('message', async ({ data }) => {
           : rawMessage || 'فشل تنزيل أو تشغيل نموذج الترجمة. حاول مرة أخرى.';
     self.postMessage({ id: data.id, type: 'error', message });
   }
+}
+
+let messageQueue = Promise.resolve();
+self.addEventListener('message', ({ data }) => {
+  messageQueue = messageQueue.then(() => handleMessage(data));
 });
