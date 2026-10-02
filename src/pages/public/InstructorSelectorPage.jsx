@@ -2,6 +2,7 @@ export const route = { path: '/', index: true, auth: null, title: 'ابدأ رح
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Users } from 'lucide-react';
 import { InstructorContext } from '../../contexts/InstructorContext';
 import Button from '../../components/ui/Button';
 import Footer from '../../components/common/Footer';
@@ -19,10 +20,53 @@ const valuePoints = [
   ['تعلّم يناسبك', 'اختار طريقتك وكمّل في الوقت اللي يناسبك.'],
 ];
 
+const ragabStages = [
+  {
+    id: 'grade-10',
+    title: 'First Secondary',
+    label: 'ثانوية عامة',
+    image: '/assets/stages/first-secondary.jpeg',
+    description: 'ابدأ تأسيسك في اللغة الإنجليزية وابنِ مهاراتك خطوة بخطوة خلال السنة.',
+    topics: ['تأسيس القواعد والمفردات', 'تطوير القراءة والكتابة', 'تدريبات واختبارات دورية'],
+  },
+  {
+    id: 'grade-11',
+    title: 'Second Secondary',
+    label: 'ثانوية عامة',
+    image: '/assets/stages/second-secondary.jpeg',
+    description: 'طوّر مستواك في اللغة واستعد لموضوعات ومهارات المرحلة المتقدمة.',
+    topics: ['قواعد وتطبيقات متقدمة', 'مهارات القراءة والكتابة', 'تدريبات على أسلوب الامتحان'],
+  },
+  {
+    id: 'grade-12',
+    title: 'Third Secondary',
+    label: 'ثانوية عامة',
+    image: '/assets/stages/third-secondary.jpeg',
+    description: 'استعداد كامل للامتحان: مراجعات مركزة، نماذج، وحل امتحانات السنين السابقة.',
+    topics: ['مراجعات نهائية', 'حل نماذج الامتحانات', 'توقعات وأهم النقاط'],
+  },
+  {
+    id: 'baccalaureate-2',
+    title: 'Second Baccalaureate',
+    label: 'بكالوريا',
+    image: '/assets/stages/second-baccalaureate.jpeg',
+    description: 'مراجعة منظمة وتدريب عملي على أسئلة البكالوريا ومهارات اللغة المطلوبة.',
+    topics: ['مراجعة أهم موضوعات المنهج', 'حل نماذج البكالوريا', 'تدريب على أسئلة الامتحانات'],
+  },
+];
+
+const ragabWhatsappGroups = [
+  { title: 'الصف الأول الثانوي', url: 'https://chat.whatsapp.com/CVTAGolYyuS0lzuGur3FAP' },
+  { title: 'الصف الثاني الثانوي عام', url: 'https://chat.whatsapp.com/CsyWqET6j686jgQgN9FDY0' },
+  { title: 'الصف الثاني بكالوريا', url: 'https://chat.whatsapp.com/J704OEHi47yA6SKKMqjufn' },
+  { title: 'الصف الثالث الثانوي', url: 'https://chat.whatsapp.com/F49VBaXN1wyCQQZJcslJZd' },
+];
+
 export default function InstructorSelectorPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { instructors = [], loading, selectInstructor = () => {} } = useContext(InstructorContext) || {};
+  const ragabInstructor = instructors.find((teacher) => /ragab|رجب/i.test(`${teacher.name || ''} ${teacher.subdomain || ''}`));
   const teachersRef = useRef(null);
   const [featuredCourses, setFeaturedCourses] = useState([]);
   const [featuredLectures, setFeaturedLectures] = useState([]);
@@ -65,6 +109,17 @@ export default function InstructorSelectorPage() {
     navigate(`/${teacher.subdomain}`);
   };
 
+  const handleStageSelect = (stage) => {
+    if (!ragabInstructor) return;
+    try {
+      selectInstructor(ragabInstructor);
+    } catch (error) {
+      console.error('Failed to select instructor:', error);
+      return;
+    }
+    navigate(`/${ragabInstructor.subdomain}/stages/${stage.id}/courses`);
+  };
+
   return (
     <div className="landing-page min-h-screen overflow-x-hidden bg-[#f5f9ff] text-[#102650]" dir="rtl">
       <div className="bg-[#0c254a] px-3 pb-14 sm:px-6 lg:px-10">
@@ -99,6 +154,42 @@ export default function InstructorSelectorPage() {
             </div>
           </div>
         </section>
+
+        {ragabInstructor && <section dir="rtl" className="landing-light-section mx-auto max-w-7xl px-5 py-14 lg:px-8" aria-labelledby="ragab-stages-title">
+          <div className="mb-7 text-right">
+            <span className="text-sm font-extrabold text-brand-500">ابدأ من مرحلتك</span>
+            <h2 id="ragab-stages-title" className="mt-2 text-3xl font-extrabold text-ink-900">اختار صفك وشوف الكورسات المناسبة ليك</h2>
+            <p className="mt-3 text-ink-600">محتوى متقسم حسب مرحلتك، من الشرح والتدريب لحد الاستعداد للامتحان.</p>
+          </div>
+          <div className="grid gap-6 lg:grid-cols-2">
+            {ragabStages.map((stage) => <button
+              key={stage.id}
+              type="button"
+              onClick={() => handleStageSelect(stage)}
+              className="group overflow-hidden rounded-[2rem] border border-surface-border bg-surface-default text-right text-ink-900 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              aria-label={`عرض كورسات ${stage.title}`}
+            >
+              <div className="relative aspect-[16/8] overflow-hidden bg-surface-muted">
+                <img src={stage.image} alt={stage.label} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+              </div>
+              <div className="p-6 sm:p-7">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h3 dir="ltr" className="text-left text-2xl font-extrabold text-ink-900">{stage.title}</h3>
+                  <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-700">{stage.label}</span>
+                </div>
+                <p className="mt-3 min-h-12 leading-7 text-ink-600">{stage.description}</p>
+                <ul className="mt-4 space-y-3 border-t border-surface-border pt-4 text-ink-800">
+                  {stage.topics.map((topic) => <li key={topic} className="flex items-center gap-3">
+                    <span aria-hidden="true" className="font-bold text-brand-500">✓</span>
+                    <span>{topic}</span>
+                  </li>)}
+                </ul>
+                <span className="mt-6 inline-flex items-center gap-2 font-extrabold text-brand-600 group-hover:text-brand-700">شوف الكورسات <span aria-hidden="true">←</span></span>
+              </div>
+            </button>)}
+          </div>
+        </section>}
 
         <section className="bg-[#1081f5] px-5 py-20 lg:px-8">
           <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2">
@@ -166,6 +257,30 @@ export default function InstructorSelectorPage() {
             </div>
           </div>
         </section>
+
+        {ragabInstructor && <section dir="rtl" className="landing-light-section px-5 py-16 lg:px-8 lg:py-20" aria-labelledby="ragab-whatsapp-title">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-10 text-right">
+              <span className="inline-flex rounded-full bg-brand-50 px-4 py-2 text-sm font-bold text-brand-600">مجتمع المستشار</span>
+              <h2 id="ragab-whatsapp-title" className="mt-5 text-3xl font-extrabold text-ink-900 sm:text-4xl">انضم إلى مجموعاتك الرسمية</h2>
+              <p className="mt-3 text-base text-ink-600">اختار صفك الدراسي للانضمام إلى جروب واتساب الرسمي.</p>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+              {ragabWhatsappGroups.map((group, index) => <a
+                key={group.url}
+                href={group.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative min-h-56 overflow-hidden rounded-[2rem] border border-surface-border bg-surface-default p-7 text-ink-900 shadow-card transition duration-300 hover:-translate-y-1 hover:border-brand-500 hover:shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              >
+                <span aria-hidden="true" className="pointer-events-none absolute -left-2 top-2 text-8xl font-black leading-none text-brand-500/10">{String(index + 1).padStart(2, '0')}</span>
+                <span className="relative grid h-14 w-14 place-items-center rounded-2xl bg-brand-50 text-brand-500"><Users size={27} strokeWidth={2.2} /></span>
+                <h3 className="relative mt-7 text-lg font-extrabold text-ink-900">{group.title}</h3>
+                <span className="relative mt-3 inline-flex items-center gap-2 font-bold text-brand-600 group-hover:text-brand-700">انضم للجروب <span aria-hidden="true">←</span></span>
+              </a>)}
+            </div>
+          </div>
+        </section>}
 
         {featuredCourses.length > 0 && <section className="landing-light-section mx-auto max-w-7xl px-5 py-16 lg:px-8">
           <div className="rounded-[var(--radius-xl)] border border-surface-border bg-surface-default p-6 shadow-card">
