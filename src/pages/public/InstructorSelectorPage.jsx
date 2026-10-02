@@ -258,25 +258,25 @@ export default function InstructorSelectorPage() {
           </div>
         </section>
 
-        {ragabInstructor && <section dir="rtl" className="landing-light-section px-5 py-16 lg:px-8 lg:py-20" aria-labelledby="ragab-whatsapp-title">
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-10 text-right">
-              <span className="inline-flex rounded-full bg-brand-50 px-4 py-2 text-sm font-bold text-brand-600">مجتمع المستشار</span>
-              <h2 id="ragab-whatsapp-title" className="mt-5 text-3xl font-extrabold text-ink-900 sm:text-4xl">انضم إلى مجموعاتك الرسمية</h2>
-              <p className="mt-3 text-base text-ink-600">اختار صفك الدراسي للانضمام إلى جروب واتساب الرسمي.</p>
+        {ragabInstructor && <section dir="rtl" className="landing-light-section px-5 py-12 lg:px-8 lg:py-[3.75rem]" aria-labelledby="ragab-whatsapp-title">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-7 text-right">
+              <span className="inline-flex rounded-full bg-brand-50 px-3 py-1.5 text-xs font-bold text-brand-600">مجتمع المستشار</span>
+              <h2 id="ragab-whatsapp-title" className="mt-4 text-2xl font-extrabold text-ink-900 sm:text-3xl">انضم إلى مجموعاتك الرسمية</h2>
+              <p className="mt-2 text-sm text-ink-600">اختار صفك الدراسي للانضمام إلى جروب واتساب الرسمي.</p>
             </div>
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {ragabWhatsappGroups.map((group, index) => <a
                 key={group.url}
                 href={group.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative min-h-56 overflow-hidden rounded-[2rem] border border-surface-border bg-surface-default p-7 text-ink-900 shadow-card transition duration-300 hover:-translate-y-1 hover:border-brand-500 hover:shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                className="group relative min-h-[10.5rem] overflow-hidden rounded-[1.5rem] border border-surface-border bg-surface-default p-4 text-ink-900 shadow-card transition duration-300 hover:-translate-y-1 hover:border-brand-500 hover:shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
               >
-                <span aria-hidden="true" className="pointer-events-none absolute -left-2 top-2 text-8xl font-black leading-none text-brand-500/10">{String(index + 1).padStart(2, '0')}</span>
-                <span className="relative grid h-14 w-14 place-items-center rounded-2xl bg-brand-50 text-brand-500"><Users size={27} strokeWidth={2.2} /></span>
-                <h3 className="relative mt-7 text-lg font-extrabold text-ink-900">{group.title}</h3>
-                <span className="relative mt-3 inline-flex items-center gap-2 font-bold text-brand-600 group-hover:text-brand-700">انضم للجروب <span aria-hidden="true">←</span></span>
+                <span aria-hidden="true" className="pointer-events-none absolute -left-2 top-2 text-6xl font-black leading-none text-brand-500/10">{String(index + 1).padStart(2, '0')}</span>
+                <span className="relative grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-500"><Users size={19} strokeWidth={2.2} /></span>
+                <h3 className="relative mt-3 text-base font-extrabold text-ink-900">{group.title}</h3>
+                <span className="relative mt-1 inline-flex items-center gap-2 text-sm font-bold text-brand-600 group-hover:text-brand-700">انضم للجروب <span aria-hidden="true">←</span></span>
               </a>)}
             </div>
           </div>

@@ -95,20 +95,25 @@ export function createTranslatorClient(workerFactory) {
 
 export function getEnglishVoices(synthesis = globalThis.speechSynthesis) {
   if (!synthesis?.getVoices) return [];
-  return synthesis.getVoices().filter((voice) => /^(en-US|en-GB)(-|$)/i.test(voice.lang || ''));
+  return synthesis.getVoices().filter((voice) => /^en(?:-|_|$)/i.test(voice.lang || ''));
 }
 
-export function speakEnglishText({ text, voiceURI, slow = false, synthesis = globalThis.speechSynthesis, utteranceFactory = null }) {
+export function speakEnglishText({ text, voiceURI, slow = false, synthesis = globalThis.speechSynthesis, utteranceFactory = null, onError }) {
   if (!text?.trim()) return { status: 'empty' };
   if (!synthesis?.speak || (!utteranceFactory && typeof SpeechSynthesisUtterance === 'undefined')) return { status: 'unavailable' };
   const voices = getEnglishVoices(synthesis);
-  if (!voices.length) return { status: 'no-voice' };
 
   const utterance = utteranceFactory ? utteranceFactory(text.trim()) : new SpeechSynthesisUtterance(text.trim());
   utterance.lang = 'en-US';
   utterance.rate = slow ? 0.7 : 1;
-  utterance.voice = voices.find((voice) => voice.voiceURI === voiceURI) || voices[0];
+  utterance.onerror = () => onError?.();
+  // Android browsers can expose no installed English voices even when their
+  // system TTS engine can speak using the default voice. Leave voice unset in
+  // that case and let the browser select its English system voice.
+  const selectedVoice = voices.find((voice) => voice.voiceURI === voiceURI) || voices[0];
+  if (selectedVoice) utterance.voice = selectedVoice;
   synthesis.cancel?.();
+  synthesis.resume?.();
   synthesis.speak(utterance);
   return { status: 'spoken' };
 }

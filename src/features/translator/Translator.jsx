@@ -105,7 +105,7 @@ export default function Translator({ variant = 'full', className = '' }) {
 
   const playEnglish = async () => {
     setSpeechMessage('');
-    const result = speakEnglishText({ text: englishText, voiceURI, slow: slowSpeech });
+    const result = speakEnglishText({ text: englishText, voiceURI, slow: slowSpeech, onError: () => setSpeechMessage('تعذر تشغيل صوت الجهاز. تأكد من تفعيل أو تثبيت خدمة تحويل النص إلى كلام باللغة الإنجليزية في إعدادات الهاتف.') });
     if (result.status === 'spoken') return;
     if (result.status === 'empty') {
       setSpeechMessage('اكتب أو ترجم نصًا إنجليزيًا أولًا.');
@@ -118,7 +118,7 @@ export default function Translator({ variant = 'full', className = '' }) {
         audioRef.current = new Audio(details.audio);
         audioRef.current.play().catch(() => setSpeechMessage('لا يوجد صوت إنجليزي متاح على جهازك حاليًا.'));
       } else {
-        setSpeechMessage(result.status === 'unavailable' ? 'النطق الصوتي غير مدعوم في هذا المتصفح.' : 'لا يوجد صوت إنجليزي على جهازك. اختر أو ثبّت صوتًا باللغة الإنجليزية.');
+        setSpeechMessage(result.status === 'unavailable' ? 'النطق الصوتي غير مدعوم في هذا المتصفح.' : 'تعذر تشغيل النطق من الجهاز. ثبّت أو فعّل خدمة تحويل النص إلى كلام باللغة الإنجليزية.');
       }
     }
   };
