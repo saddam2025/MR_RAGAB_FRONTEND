@@ -1,3 +1,6 @@
+export const DEFAULT_SUPPORT_PHONE = '01060309494';
+export const DEFAULT_SUPPORT_PHONE_DISPLAY = '01060309494';
+
 export function normalizeEgyptianPhone(value) {
   let digits = String(value || '').trim().replace(/\D/g, '');
   if (!digits) return '';

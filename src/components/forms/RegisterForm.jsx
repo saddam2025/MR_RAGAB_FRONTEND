@@ -65,7 +65,7 @@ export default function RegisterForm({ instructorId: propInstructorId, instructo
   ];
   // Keep the canonical `{ id, label }` shape. `id` is what the API stores
   // and validates; `label` is Arabic display text only.
-  const stages = stageDefinitions;
+  const stages = stageDefinitions.filter((stage) => !['grade-7', 'grade-8', 'grade-9'].includes(stage.id));
 
   const validateEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);

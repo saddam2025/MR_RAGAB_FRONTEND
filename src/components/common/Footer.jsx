@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import ConfirmModal from '../ui/ConfirmModal';
+import { DEFAULT_SUPPORT_PHONE, DEFAULT_SUPPORT_PHONE_DISPLAY, egyptianWhatsappUrl } from '../../utils/phone';
+import { InstructorContext } from '../../contexts/InstructorContext';
+import instructorService from '../../services/instructorService';
 
 export default function Footer() {
   const [showParentGuide, setShowParentGuide] = useState(false);
+  const [supportPhone, setSupportPhone] = useState(DEFAULT_SUPPORT_PHONE);
   const navigate = useNavigate();
   const location = useLocation();
+  const { instructors = [] } = useContext(InstructorContext) || {};
+  const ragabInstructor = instructors.find((teacher) => /ragab|رجب/i.test(`${teacher.name || ''} ${teacher.subdomain || ''}`));
+
+  useEffect(() => {
+    let active = true;
+    setSupportPhone(DEFAULT_SUPPORT_PHONE);
+    if (!ragabInstructor?.subdomain) return () => { active = false; };
+    instructorService.get(ragabInstructor.subdomain)
+      .then((response) => { if (active) setSupportPhone(response.data?.supportPhone || DEFAULT_SUPPORT_PHONE); })
+      .catch(() => {});
+    return () => { active = false; };
+  }, [ragabInstructor?.subdomain]);
 
   const goHome = (event) => {
     event.preventDefault();
@@ -52,14 +68,14 @@ export default function Footer() {
           <div className="text-right">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-ink-900">الدعم الفني</h3>
             <ul className="mt-4 space-y-3 text-sm text-ink-600">
-              <li><a href="https://wa.me/201060369537" target="_blank" rel="noopener noreferrer" className="transition hover:text-ink-900">تواصل مع الدعم الفني</a></li>
+              <li><a href={egyptianWhatsappUrl(supportPhone)} target="_blank" rel="noopener noreferrer" className="transition hover:text-ink-900">تواصل مع الدعم الفني</a></li>
             </ul>
           </div>
 
           <div className="text-right">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-ink-900">لو عايز تبدأ منصتك تواصل معانا</h3>
             <ul className="mt-4 space-y-3 text-sm text-ink-600">
-              <li><a href="https://wa.me/201060369537" target="_blank" rel="noopener noreferrer" className="transition hover:text-ink-900">01060369537</a></li>
+              <li><a href={egyptianWhatsappUrl(supportPhone)} target="_blank" rel="noopener noreferrer" className="transition hover:text-ink-900">{supportPhone === DEFAULT_SUPPORT_PHONE ? DEFAULT_SUPPORT_PHONE_DISPLAY : supportPhone}</a></li>
             </ul>
           </div>
         </div>

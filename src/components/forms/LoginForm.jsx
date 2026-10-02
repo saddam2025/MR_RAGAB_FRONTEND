@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import instructorService from '../../services/instructorService';
-import { egyptianWhatsappUrl } from '../../utils/phone';
+import { DEFAULT_SUPPORT_PHONE, egyptianWhatsappUrl } from '../../utils/phone';
 import { useAuth } from '../../hooks/useAuth';
 import Input from '../ui/Input';
 import PasswordInput from '../ui/PasswordInput';
@@ -24,15 +24,19 @@ export default function LoginForm({ onSuccess, instructorId }) {
   const [mfaCode, setMfaCode] = useState('');
   const [useBackupCode, setUseBackupCode] = useState(false);
   const [hasFailedLogin, setHasFailedLogin] = useState(false);
-  const [supportPhone, setSupportPhone] = useState('');
+  const [supportPhone, setSupportPhone] = useState(DEFAULT_SUPPORT_PHONE);
 
   useEffect(() => {
     let active = true;
-    setSupportPhone('');
+    setSupportPhone(DEFAULT_SUPPORT_PHONE);
     if (!instructorId) return () => { active = false; };
     instructorService.get(instructorId)
-      .then((response) => { if (active) setSupportPhone(response.data?.supportPhone || ''); })
-      .catch(() => { if (active) setSupportPhone(''); });
+      .then((response) => {
+        if (!active) return;
+        const tenant = response.data || {};
+        setSupportPhone(tenant.supportPhone || DEFAULT_SUPPORT_PHONE);
+      })
+      .catch(() => { if (active) setSupportPhone(DEFAULT_SUPPORT_PHONE); });
     return () => { active = false; };
   }, [instructorId]);
 

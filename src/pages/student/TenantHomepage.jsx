@@ -13,7 +13,7 @@ import useTenantData from '../../hooks/useTenantData.js';
 import { useAuth } from '../../hooks/useAuth';
 import instructorService from '../../services/instructorService';
 import standaloneExamService from '../../services/standaloneExamService';
-import { egyptianWhatsappUrl } from '../../utils/phone';
+import { DEFAULT_SUPPORT_PHONE, egyptianWhatsappUrl } from '../../utils/phone';
 import AlMustasharIntroduction from '../../components/hero/AlMustasharIntroduction.jsx';
 
 export default function TenantHomepage() {
@@ -70,8 +70,8 @@ export default function TenantHomepage() {
   // homepage representative of the six standard school stages instead of
   // displaying a misleading zero.
   const stagesCount = instructorProfile.stagesOffered.length || 6;
-  const supportHref = egyptianWhatsappUrl(instructorProfile.supportPhone || '201060369537');
   const isRagabTenant = /ragab|رجب/i.test(`${instructorProfile.name || ''} ${instructorId || ''}`);
+  const supportHref = egyptianWhatsappUrl(instructorProfile.supportPhone || DEFAULT_SUPPORT_PHONE);
 
   return (
     <div className="space-y-10">

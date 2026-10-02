@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import instructorService from '../../services/instructorService';
-import { egyptianWhatsappUrl } from '../../utils/phone';
-
-const DEFAULT_SUPPORT_PHONE = '201060369537';
+import { DEFAULT_SUPPORT_PHONE, egyptianWhatsappUrl } from '../../utils/phone';
 
 export default function SupportContactButton() {
   const location = useLocation();
@@ -17,7 +15,11 @@ export default function SupportContactButton() {
     if (!isTenantRoute) return () => { active = false; };
 
     instructorService.get(instructorId)
-      .then((response) => { if (active && response.data?.supportPhone) setSupportPhone(response.data.supportPhone); })
+      .then((response) => {
+        if (!active) return;
+        const tenant = response.data || {};
+        setSupportPhone(tenant.supportPhone || DEFAULT_SUPPORT_PHONE);
+      })
       .catch(() => {});
 
     return () => { active = false; };
