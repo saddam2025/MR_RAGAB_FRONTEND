@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeftRight, BookOpen, Check, Copy, Languages, LoaderCircle, Mic2, Sparkles, Volume2 } from 'lucide-react';
 import Button from '../../components/ui/Button.jsx';
-import { createTranslatorClient, fetchEnglishWordDetails, getEnglishVoices, speakEnglishText } from './translatorClient.js';
+import { fetchEnglishWordDetails, getEnglishVoices, speakEnglishText, translateViaServer } from './translatorClient.js';
 import { getTranslationDirection, isSingleEnglishWord, MAX_TRANSLATION_CHARS } from './translatorUtils.js';
 
 const directionLabels = {
@@ -17,7 +17,6 @@ function friendlyProgress(progress) {
 
 export default function Translator({ variant = 'full', className = '' }) {
   const isCompact = variant === 'compact';
-  const clientRef = useRef(null);
   const audioRef = useRef(null);
   const sectionRef = useRef(null);
   const [input, setInput] = useState('');
@@ -39,14 +38,7 @@ export default function Translator({ variant = 'full', className = '' }) {
   const englishWord = isSingleEnglishWord(englishText) ? englishText : '';
   const downloadProgress = friendlyProgress(progress);
 
-  if (!clientRef.current) {
-    clientRef.current = createTranslatorClient(() => new Worker(new URL('./translator.worker.js', import.meta.url), { type: 'module' }));
-  }
-
-  useEffect(() => () => {
-    clientRef.current?.terminate();
-    audioRef.current?.pause?.();
-  }, []);
+  useEffect(() => () => audioRef.current?.pause?.(), []);
 
   useEffect(() => {
     if (!globalThis.speechSynthesis) return undefined;
@@ -80,7 +72,7 @@ export default function Translator({ variant = 'full', className = '' }) {
     setWordDetails(null);
     setLoading(true);
     try {
-      const translated = await clientRef.current.translate(input, direction, setProgress);
+      const translated = await translateViaServer(input, direction, setProgress);
       setOutput(translated);
     } catch (translationError) {
       setError(translationError?.message || 'تعذر إتمام الترجمة. حاول مرة أخرى.');
@@ -146,7 +138,7 @@ export default function Translator({ variant = 'full', className = '' }) {
             اكتب كلمة أو جملة بالعربية أو الإنجليزية، واعرف معناها واستمع إلى نطقها بسهولة.
           </p>
           <p className={`mt-2 max-w-xl text-xs leading-6 sm:text-sm ${isCompact ? 'text-white/60' : 'text-ink-500'}`}>
-            {isCompact ? 'المترجم هدية من مستر رجب لطلابه، وهتلاقيه كمان في لوحة التحكم وقت ما تحتاجه.' : 'اختار اتجاه الترجمة أو اتركه تلقائيًا، ثم اكتب كلمة أو جملة قصيرة وابدأ.'}
+            {isCompact ? 'المترجم هدية من مستر رجب لطلابه، ويشتغل على السيرفر من غير تحميل النموذج على موبايلك. أول ترجمة بعد نشر التحديث ممكن تستغرق وقتًا لتجهيز النموذج.' : 'اختار اتجاه الترجمة أو اتركه تلقائيًا، ثم اكتب كلمة أو جملة قصيرة وابدأ.'}
           </p>
           {!isCompact && <div className="mt-5 flex flex-wrap gap-2" aria-label="أمثلة إنجليزية للتجربة">
             {samples.map((sample) => <button key={sample} type="button" onClick={() => { setInput(sample); setDirectionOverride('en-ar'); setOutput(''); }} className="rounded-full border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-ink-600 transition hover:border-brand-400 hover:text-brand-700">{sample}</button>)}
@@ -191,7 +183,7 @@ export default function Translator({ variant = 'full', className = '' }) {
           </div>
 
           {loading && <div className="mt-4" role="status" aria-live="polite">
-            <div className="mb-2 flex justify-between gap-3 text-xs text-ink-500"><span>{downloadProgress === null ? 'تحميل النموذج أو معالجة النص لأول مرة...' : `تحميل النموذج ${Math.round(downloadProgress)}%`}</span><span>يُحمّل مرة واحدة لكل اتجاه</span></div>
+            <div className="mb-2 flex justify-between gap-3 text-xs text-ink-500"><span>{progress?.phase === 'server' ? 'جاري الترجمة على السيرفر...' : downloadProgress === null ? 'جاري تجهيز الترجمة...' : `تحميل النموذج ${Math.round(downloadProgress)}%`}</span><span>تحميل النموذج يتم على السيرفر</span></div>
             <div className="h-2 overflow-hidden rounded-full bg-surface-default"><div className={`h-full rounded-full bg-brand-500 transition-all duration-300 ${downloadProgress === null ? 'w-2/5 animate-pulse' : ''}`} style={downloadProgress === null ? undefined : { width: `${downloadProgress}%` }} /></div>
           </div>}
           {error && <p role="alert" className="mt-3 rounded-xl border border-danger-DEFAULT/20 bg-danger-soft p-3 text-sm text-danger-DEFAULT">{error}</p>}

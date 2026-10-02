@@ -1,4 +1,24 @@
 import { MAX_TRANSLATION_CHARS, splitIntoSentences, validateTranslationInput } from './translatorUtils.js';
+import api from '../../services/api.js';
+
+export async function translateViaServer(text, direction, onProgress) {
+  const validation = validateTranslationInput(text);
+  if (!validation.valid) {
+    const message = validation.reason === 'too-long'
+      ? `الحد الأقصى للنص ${MAX_TRANSLATION_CHARS} حرفًا.`
+      : 'اكتب كلمة أو جملة للترجمة.';
+    throw new Error(message);
+  }
+
+  const chunks = splitIntoSentences(validation.value);
+  const translations = [];
+  for (let index = 0; index < chunks.length; index += 1) {
+    onProgress?.({ phase: 'server', current: index + 1, total: chunks.length });
+    const response = await api.post('/translator/translate', { text: chunks[index], direction });
+    translations.push(response.data?.translation || '');
+  }
+  return translations.join(' ').trim();
+}
 
 export function createTranslatorClient(workerFactory) {
   let worker = null;
