@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import ConfirmModal from '../ui/ConfirmModal';
-import { DEFAULT_SUPPORT_PHONE, DEFAULT_SUPPORT_PHONE_DISPLAY, egyptianWhatsappUrl } from '../../utils/phone';
+import { DEFAULT_SUPPORT_PHONE, egyptianWhatsappUrl } from '../../utils/phone';
 import { InstructorContext } from '../../contexts/InstructorContext';
 import instructorService from '../../services/instructorService';
+
+const CREATOR_WHATSAPP_PHONE = '+201060369537';
 
 export default function Footer() {
   const [showParentGuide, setShowParentGuide] = useState(false);
@@ -72,18 +74,12 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="text-right">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-ink-900">لو عايز تبدأ منصتك تواصل معانا</h3>
-            <ul className="mt-4 space-y-3 text-sm text-ink-600">
-              <li><a href={egyptianWhatsappUrl(supportPhone)} target="_blank" rel="noopener noreferrer" className="transition hover:text-ink-900">{supportPhone === DEFAULT_SUPPORT_PHONE ? DEFAULT_SUPPORT_PHONE_DISPLAY : supportPhone}</a></li>
-            </ul>
-          </div>
         </div>
       </div>
 
       <div className="border-t border-surface-border bg-surface-muted px-4 py-4 text-center text-xs text-ink-500 sm:px-6 lg:px-8">
         <div>© {new Date().getFullYear()} <Logo className="inline-flex align-middle" />. كل الحقوق محفوظة.</div>
-        <div>تم إنشاء المنصة بواسطة المهندس عبدالرحمن محسن زغلول</div>
+        <div><a href={egyptianWhatsappUrl(CREATOR_WHATSAPP_PHONE)} target="_blank" rel="noopener noreferrer" className="transition hover:text-ink-900">تم إنشاء المنصة بواسطة المهندس عبدالرحمن محسن زغلول</a></div>
       </div>
       {showParentGuide && <ConfirmModal title="متابعة ابنك من حساب ولي الأمر" description={<ol className="list-inside list-decimal space-y-2 text-right"><li>أنشئ حسابًا جديدًا أو سجّل الدخول كولي أمر.</li><li>اطلب من ابنك كود الربط الذي يظهر له في لوحة الطالب؛ هذا هو <span dir="ltr">parentAccessCode</span> الخاص بحسابه.</li><li>أدخل كود الربط عند التسجيل ليتم ربط حسابك بحساب ابنك.</li><li>بعد الدخول، ستجد في لوحة ولي الأمر دورات ابنك ودرجاته.</li></ol>} confirmLabel="حسنًا" cancelLabel="إغلاق" onConfirm={() => setShowParentGuide(false)} onCancel={() => setShowParentGuide(false)} />}
     </footer>

@@ -9,7 +9,6 @@ import { resolveApiAssetUrl } from '../../services/api';
 
 const blank = (order = 1) => ({ title_ar: '', title_en: '', description_ar: '', description_en: '', order, price: '', isFree: false, isPublished: false, quizId: '', thumbnail: null, video: null, homework: null });
 const fieldClasses = 'w-full rounded-md border border-surface-border bg-surface-default px-3 py-2 text-sm text-ink-900';
-const MAX_VIDEO_BYTES = 500 * 1024 * 1024;
 
 export default function LectureManager({ instructorId, courseId }) {
   const navigate = useNavigate();
@@ -28,7 +27,6 @@ export default function LectureManager({ instructorId, courseId }) {
   const save = async () => {
     if (!draft?.title_ar?.trim()) return setError('عنوان المحاضرة بالعربية مطلوب.');
     if (draft.video && !['video/mp4', 'video/webm'].includes(draft.video.type)) return setError('يُقبل فيديو MP4 أو WebM فقط.');
-    if (draft.video && draft.video.size > MAX_VIDEO_BYTES) return setError('يجب ألا يتجاوز حجم الفيديو 500MB.');
     setSaving(true); setError(''); setVideoProgress(null);
     try {
       const fields = { ...draft, price: draft.isFree ? 0 : Number(draft.price) || 0 };

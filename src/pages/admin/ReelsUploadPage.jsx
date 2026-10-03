@@ -8,14 +8,12 @@ import { resolveApiAssetUrl } from '../../services/api';
 import reelService from '../../services/reelService';
 import { STAGES, stageLabel } from '../../constants/stages';
 
-const MAX_REEL_BYTES = 500 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(['video/mp4', 'video/webm']);
 const PAGE_SIZE = 10;
 
 function fileError(file) {
   if (!file) return 'اختر ملف فيديو أولاً.';
   if (!ALLOWED_TYPES.has(file.type)) return 'يقبل الخادم ملفات MP4 أو WebM فقط.';
-  if (file.size > MAX_REEL_BYTES) return 'يجب ألا يتجاوز حجم الفيديو 500MB.';
   return '';
 }
 
@@ -129,11 +127,11 @@ export default function ReelsUploadPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6" dir="rtl">
-      <div><p className="text-sm font-bold text-brand-600">محتوى قصير وجذاب</p><h1 className="text-2xl font-extrabold text-ink-900">رفع مقطع سريع</h1><p className="mt-1 text-sm text-ink-500">يدعم الخادم MP4 وWebM حتى 500MB، مع وصف ومرحلة اختياريين.</p></div>
+      <div><p className="text-sm font-bold text-brand-600">محتوى قصير وجذاب</p><h1 className="text-2xl font-extrabold text-ink-900">رفع مقطع سريع</h1><p className="mt-1 text-sm text-ink-500">يدعم الخادم MP4 وWebM بدون حد لحجم الفيديو، مع وصف ومرحلة اختياريين.</p></div>
 
       <form className="rounded-[var(--radius-xl)] border border-surface-border bg-surface-default p-6 shadow-card" onSubmit={upload}>
         <label className="grid cursor-pointer place-items-center rounded-[var(--radius-lg)] border-2 border-dashed border-brand-300 bg-surface-muted p-10 text-center hover:bg-surface-border">
-          <span className="text-4xl" aria-hidden="true">↑</span><b className="mt-3 text-ink-900">{file ? file.name : 'اختر فيديو للرفع'}</b><small className="mt-1 text-ink-500">MP4 أو WebM — حتى 500MB</small>
+          <span className="text-4xl" aria-hidden="true">↑</span><b className="mt-3 text-ink-900">{file ? file.name : 'اختر فيديو للرفع'}</b><small className="mt-1 text-ink-500">MP4 أو WebM — بدون حد للحجم</small>
           <input ref={inputRef} type="file" accept="video/mp4,video/webm" className="hidden" onChange={chooseFile} disabled={uploading} />
         </label>
         {validationError && <p role="alert" className="mt-3 text-sm text-danger-DEFAULT">{validationError}</p>}
