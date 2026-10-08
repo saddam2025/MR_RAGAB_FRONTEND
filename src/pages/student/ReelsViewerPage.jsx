@@ -1,10 +1,11 @@
 export const route = { path: '/:instructorId/reels', index: false, auth: 'student', title: 'مقاطع سريعة' };
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import { resolveApiAssetUrl } from '../../services/api';
 import reelService from '../../services/reelService';
+import { trackReelViewOnce } from '../../services/reelViewTracking';
 import { stageLabel } from '../../constants/stages';
 
 const PAGE_SIZE = 10;
@@ -15,7 +16,6 @@ function errorMessage(error, fallback) {
 
 export default function ReelsViewerPage() {
   const { instructorId } = useParams();
-  const trackedReelIds = useRef(new Set());
   const [reels, setReels] = useState([]);
   const [pagination, setPagination] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -49,11 +49,9 @@ export default function ReelsViewerPage() {
   }, [load]);
 
   const trackView = async (reelId) => {
-    if (trackedReelIds.current.has(reelId)) return;
-    trackedReelIds.current.add(reelId);
     setTrackingError('');
     try {
-      await reelService.trackView(reelId);
+      await trackReelViewOnce(reelId);
     } catch (requestError) {
       setTrackingError(errorMessage(requestError, 'تعذر تسجيل مشاهدة هذا المقطع.'));
     }

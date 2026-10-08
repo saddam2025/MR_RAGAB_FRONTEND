@@ -11,9 +11,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Avatar from '../../components/ui/Avatar';
-import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
-import api from '../../services/api';
+import { resolveApiAssetUrl } from '../../services/api';
+import reelService from '../../services/reelService';
+import { trackReelViewOnce } from '../../services/reelViewTracking';
+import useEnrolledCourses from '../../hooks/useEnrolledCourses';
+import MyCourseCard from '../../components/common/MyCourseCard';
 import Translator from '../../features/translator/Translator.jsx';
 
 export default function StudentDashboard() {
@@ -21,19 +24,25 @@ export default function StudentDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
-  const [coursesLoading, setCoursesLoading] = useState(true);
+  const { courses: enrolledCourses, tenant, loading: coursesLoading, error: coursesError } = useEnrolledCourses(instructorId);
+  const [reels, setReels] = useState([]);
+  const [reelsLoading, setReelsLoading] = useState(true);
+  const [reelsError, setReelsError] = useState('');
+  const [videoErrors, setVideoErrors] = useState({});
 
   const walletBalance = user?.walletBalance ?? 0;
   const parentAccessCode = user?.parentAccessCode || null;
 
   useEffect(() => {
     let active = true;
-    api.get('/courses/enrolled')
-      .then((response) => { if (active) setEnrolledCourses(response?.data?.data || []); })
-      .finally(() => { if (active) setCoursesLoading(false); });
+    setReelsLoading(true);
+    setReelsError('');
+    reelService.list(instructorId, 1, 8)
+      .then((response) => { if (active) setReels(Array.isArray(response?.data?.data) ? response.data.data : []); })
+      .catch((error) => { if (active) setReelsError(error?.message || 'تعذر تحميل الريلز. حاول مرة أخرى.'); })
+      .finally(() => { if (active) setReelsLoading(false); });
     return () => { active = false; };
-  }, []);
+  }, [instructorId]);
 
   const handleCopyCode = async () => {
     if (!parentAccessCode) return;
@@ -67,8 +76,13 @@ export default function StudentDashboard() {
 
       {/* Enrolled courses */}
       <section id="current-courses" className="scroll-mt-24 rounded-[var(--radius-xl)] border border-surface-border bg-surface-default p-5 shadow-card sm:p-6">
-        <div className="mb-5 flex items-end justify-between gap-4"><div><p className="text-sm font-semibold text-brand-600">تابع تقدّمك</p><h2 className="mt-1 text-xl font-extrabold text-ink-900">كورساتي</h2></div><Button variant="subtle" size="sm" onClick={() => navigate(`/${instructorId}/catalog`)}>استكشف الكورسات</Button></div>
-        {coursesLoading ? <div className="rounded-2xl bg-surface-muted p-6 text-center text-sm text-ink-500">جارٍ تحميل كورساتي...</div> : enrolledCourses.length === 0 ? <div className="rounded-2xl bg-surface-muted p-6 text-center text-sm text-ink-500">لا توجد كورسات في قائمتك حتى الآن.</div> : <div className="grid gap-3 sm:grid-cols-2">{enrolledCourses.map(({ course, expiresAt, viewsRemaining, includedWithCourse, fullAccess, partialLectureCount }) => <button type="button" key={course._id} onClick={() => navigate(`/${instructorId}/courses/${course._id}`)} className="rounded-2xl border border-surface-border bg-surface-canvas p-4 text-right transition hover:border-brand-400"><p className="font-bold text-ink-900">{course.title_ar || course.title_en}</p><p className="mt-1 text-sm text-ink-500">{course.lectureCount || 0} محاضرة · {course.price ?? 0} ج.م</p><p className="mt-1 text-xs text-ink-500">{fullAccess || includedWithCourse ? 'يشمل كل المحاضرات' : `لديك وصول إلى ${partialLectureCount || 1} محاضرة`} · متاح حتى {new Date(expiresAt).toLocaleDateString('ar-EG')}</p></button>)}</div>}
+        <div className="mb-5 flex items-end justify-between gap-4"><div><p className="text-sm font-semibold text-brand-600">تابع تقدّمك</p><h2 className="mt-1 text-xl font-extrabold text-ink-900">كورساتي</h2></div><Button variant="subtle" size="sm" onClick={() => navigate(`/${instructorId}/my-courses`)}>كل كورساتي</Button></div>
+        {coursesLoading ? <div className="rounded-2xl bg-surface-muted p-6 text-center text-sm text-ink-500">جارٍ تحميل كورساتي...</div> : coursesError ? <div role="alert" className="rounded-2xl bg-danger-soft p-6 text-center text-sm text-danger-DEFAULT">{coursesError}</div> : enrolledCourses.length === 0 ? <div className="rounded-2xl bg-surface-muted p-6 text-center text-sm text-ink-500">لا توجد كورسات في قائمتك حتى الآن.</div> : <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{enrolledCourses.slice(0, 3).map((enrollment) => <MyCourseCard key={enrollment.course._id} enrollment={enrollment} tenant={tenant} instructorId={instructorId} />)}</div>}
+      </section>
+
+      <section className="rounded-[var(--radius-xl)] border border-surface-border bg-surface-default p-5 shadow-card sm:p-6" aria-labelledby="dashboard-reels-title">
+        <div className="mb-5"><p className="text-sm font-semibold text-brand-600">مقاطع قصيرة</p><h2 id="dashboard-reels-title" className="mt-1 text-xl font-extrabold text-ink-900">ريلز</h2></div>
+        {reelsLoading ? <div className="rounded-2xl bg-surface-muted p-6 text-center text-sm text-ink-500">جارٍ تحميل الريلز...</div> : reelsError ? <div role="alert" className="rounded-2xl bg-danger-soft p-6 text-center text-sm text-danger-DEFAULT">{reelsError}</div> : reels.length === 0 ? <div className="rounded-2xl bg-surface-muted p-6 text-center text-sm text-ink-500">لا توجد ريلز حتى الآن</div> : <div className="flex snap-x gap-4 overflow-x-auto pb-2">{reels.map((reel) => <article key={reel._id} className="w-52 shrink-0 snap-start overflow-hidden rounded-2xl bg-navy-900 text-white shadow-panel sm:w-56"><video className="aspect-[9/16] w-full bg-black object-cover" controls playsInline preload="metadata" src={resolveApiAssetUrl(reel.videoUrl)} onPlay={() => trackReelViewOnce(reel._id).catch(() => {})} onError={() => setVideoErrors((current) => ({ ...current, [reel._id]: true }))}>متصفحك لا يدعم تشغيل الفيديو.</video><div className="p-3">{reel.caption && <p className="line-clamp-2 text-sm leading-6">{reel.caption}</p>}{videoErrors[reel._id] && <p role="alert" className="mt-2 text-sm text-red-300">تعذر تشغيل هذا الفيديو.</p>}</div></article>)}</div>}
       </section>
 
       <Translator variant="compact" />
@@ -89,15 +103,6 @@ export default function StudentDashboard() {
         </div>
       </section>
 
-      {/* Quick links */}
-      <section className="flex items-center gap-3 flex-wrap">
-        <Button variant="subtle" onClick={() => navigate(`/${instructorId}/leaderboard`)}>
-          لوحة الشرف
-        </Button>
-        <Button variant="subtle" onClick={() => navigate(`/${instructorId}/reels`)}>
-          الفيديوهات القصيرة
-        </Button>
-      </section>
     </div>
   );
 }

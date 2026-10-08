@@ -13,6 +13,7 @@ const CourseCatalogPage = lazy(() => import('./pages/student/CourseCatalogPage.j
 const CourseDetailPage = lazy(() => import('./pages/student/CourseDetailPage.jsx'));
 const CheckoutPage = lazy(() => import('./pages/student/CheckoutPage.jsx'));
 const StudentDashboard = lazy(() => import('./pages/student/StudentDashboard.jsx'));
+const MyCoursesPage = lazy(() => import('./pages/student/MyCoursesPage.jsx'));
 const TranslatorPage = lazy(() => import('./pages/student/TranslatorPage.jsx'));
 const ExamGradesPage = lazy(() => import('./pages/student/ExamGradesPage.jsx'));
 const AssignmentGradesPage = lazy(() => import('./pages/student/AssignmentGradesPage.jsx')); 
@@ -70,6 +71,7 @@ const scopedRoutes = [
   { path: 'checkout/:courseId', element: CheckoutPage },
   { path: 'courses/:courseId/lectures/:lectureId/checkout', element: CheckoutPage },
   { path: 'dashboard', element: StudentDashboard },
+  { path: 'my-courses', element: MyCoursesPage, allowedRoles: ['student'] },
   { path: 'translator', element: TranslatorPage, allowedRoles: ['student'] },
   { path: 'exam-grades', element: ExamGradesPage },
   { path: 'assignment-grades', element: AssignmentGradesPage },

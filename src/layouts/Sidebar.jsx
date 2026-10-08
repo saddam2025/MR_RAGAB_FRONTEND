@@ -300,7 +300,7 @@ export default function Sidebar() {
       <nav className="flex-1 space-y-2">
         <Item to={`${base}/dashboard`} icon="dashboard" activeWhen={({ pathname, hash }) => pathname === `${base}/dashboard` && hash !== '#parent-access-code' && hash !== '#current-courses'}>لوحة التحكم</Item>
         <Item to={`${base}/catalog`} icon="menu_book">الكورسات</Item>
-        <Item to={`${base}/dashboard#current-courses`} icon="menu_book" activeWhen={({ pathname, hash }) => pathname === `${base}/dashboard` && hash === '#current-courses'}>كورساتي</Item>
+        <Item to={`${base}/my-courses`} icon="menu_book">كورساتي</Item>
         <Item to={`${base}/translator`} icon="translate">المترجم الناطق</Item>
         <Item to={`${base}/wallet`} icon="vpn_key">محفظتي</Item>
         <Item to={`${base}/reels`} icon="menu_book">الريلز</Item>
