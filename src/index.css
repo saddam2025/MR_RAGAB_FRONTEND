@@ -218,7 +218,6 @@ section.bg-surface-default.shadow-card > div.space-y-2 > article > div:last-chil
   font-weight: 700;
 }
 .video-fullscreen-button:hover { background: rgba(0, 0, 0, .68); }
-.video-mobile-fullscreen-control { display: none; }
 
 /* Safari on iPhone does not support element fullscreen for this cross-origin
    Bunny iframe. This page-level mode preserves the watermark layer. */
@@ -243,25 +242,6 @@ section.bg-surface-default.shadow-card > div.space-y-2 > article > div:last-chil
   max-height: none;
   object-fit: contain;
 }
-/* Sits above Bunny's bottom-right fullscreen icon and routes the tap to
-   the safe page-level mode instead of iframe-native fullscreen. */
-.video-mobile-fullscreen-control {
-  display: grid;
-  place-items: center;
-  position: absolute;
-  z-index: 30;
-  right: .35rem;
-  bottom: .35rem;
-  width: 2.7rem;
-  height: 2.7rem;
-  border: 0;
-  border-radius: .45rem;
-  background: rgba(0, 0, 0, .42);
-  color: #fff;
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
 /* Keep sidebar content scrollable without showing a browser-specific track. */
 .sidebar-scroll {
   -ms-overflow-style: none;

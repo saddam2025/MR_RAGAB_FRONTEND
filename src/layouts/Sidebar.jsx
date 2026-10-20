@@ -228,6 +228,7 @@ export default function Sidebar() {
           {canGrade && <Item to={`${base}/assistant/grade`} icon="assignment_turned_in">تصحيح الواجبات</Item>}
           {/* Requirement #15: assistants have identical upload permissions to teachers */}
           <Item to={`${base}/admin/courses`} icon="upload_file">رفع محتوى تعليمي</Item>
+          <Item to={`${base}/admin/reels`} icon="upload_file">رفع ريل</Item>
           {canCreateQuizzes && <Item to={`${base}/admin/quiz-builder`} icon="quiz">منشئ اختبارات المحاضرات</Item>}
           <Item to={`${base}/admin/standalone-exams`} icon="quiz">امتحانات منفصلة</Item>
           <Item to={`${base}/assistant/messages`} icon="family_restroom">رسائل أولياء الأمور</Item>

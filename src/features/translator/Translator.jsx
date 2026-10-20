@@ -126,10 +126,10 @@ export default function Translator({ variant = 'full', className = '' }) {
   const samples = useMemo(() => ['Hello', 'Amazing', 'Beautiful', 'Review'], []);
 
   return (
-    <section ref={sectionRef} dir="rtl" className={`relative overflow-hidden rounded-[2rem] border ${isCompact ? 'border-[#263448] bg-[#0b111c] text-white shadow-[0_24px_70px_rgba(0,0,0,.3)]' : 'border-surface-border bg-surface-default text-ink-900 shadow-card'} ${className}`} aria-labelledby="translator-title">
+    <section ref={sectionRef} dir="rtl" className={`relative box-border w-full min-w-0 max-w-full overflow-hidden rounded-[2rem] border ${isCompact ? 'border-[#263448] bg-[#0b111c] text-white shadow-[0_24px_70px_rgba(0,0,0,.3)]' : 'border-surface-border bg-surface-default text-ink-900 shadow-card'} ${className}`} aria-label={isCompact ? 'المترجم' : undefined} aria-labelledby={isCompact ? undefined : 'translator-title'}>
       <div className="pointer-events-none absolute -left-20 -top-20 h-56 w-56 rounded-full bg-brand-500/10 blur-3xl" />
-      <div className={`relative grid gap-6 p-4 sm:p-6 lg:gap-8 ${isCompact ? 'lg:grid-cols-[.9fr_1.1fr] lg:p-8' : 'lg:grid-cols-[1.15fr_.85fr] lg:p-9'}`}>
-        <div className="order-1 flex flex-col justify-center text-right lg:pr-3">
+      <div className={`relative grid min-w-0 grid-cols-1 gap-6 p-3 sm:p-6 lg:gap-8 ${isCompact ? 'lg:p-6' : 'lg:grid-cols-[1.15fr_.85fr] lg:p-9'}`}>
+        {!isCompact && <div className="order-1 flex min-w-0 flex-col justify-center text-right lg:pr-3">
           <span className="inline-flex w-fit items-center gap-2 rounded-full bg-brand-500/10 px-3 py-1.5 text-xs font-bold text-brand-700 dark:text-brand-200"><Sparkles size={14} /> قاموس ناطق مجاني</span>
           <h2 id="translator-title" className={`mt-4 font-display font-extrabold leading-tight ${isCompact ? 'text-white text-2xl sm:text-3xl' : 'text-ink-900 text-3xl sm:text-4xl'}`}>
             اكتب أي كلمة... واسمع النطق
@@ -147,15 +147,15 @@ export default function Translator({ variant = 'full', className = '' }) {
             <span className={`rounded-full border px-3 py-1.5 ${isCompact ? 'border-white/10 bg-white/5' : 'border-surface-border bg-surface-muted'}`}>هدية من مستر رجب لطلابه</span>
             <span className={`rounded-full border px-3 py-1.5 ${isCompact ? 'border-white/10 bg-white/5' : 'border-surface-border bg-surface-muted'}`}>ترجمة ونطق في مكان واحد</span>
           </div>
-        </div>
+        </div>}
 
-        <form onSubmit={translate} className={`order-2 rounded-[1.75rem] border p-4 sm:p-5 ${isCompact ? 'border-white/10 bg-[#111927] lg:order-2' : 'border-surface-border bg-surface-muted/70 lg:order-2'}`}>
+        <form onSubmit={translate} className={`order-2 box-border min-w-0 w-full max-w-full rounded-[1.75rem] border p-3 sm:p-5 ${isCompact ? 'border-white/10 bg-[#111927]' : 'border-surface-border bg-surface-muted/70'}`}>
           {isCompact && <div className="mb-3" role="status" aria-live="polite">
             <p className="text-[11px] text-white/65">هيتم تحميل نموذج اللغة المطلوبة عند أول ترجمة لتقليل استهلاك الذاكرة.</p>
           </div>}
-          <div className="mb-4 flex items-center justify-between gap-3">
+          <div className="mb-4 flex min-w-0 flex-wrap items-center justify-between gap-3">
               <span className={`text-[11px] font-semibold uppercase tracking-[.16em] sm:text-xs ${isCompact ? 'text-white/55' : 'text-ink-500'}`}>Speaking Dictionary</span>
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
               <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${isCompact ? 'border-white/10 text-white/75' : 'border-surface-border text-ink-600'}`}>{labels.source}</span>
               <button type="button" onClick={swapDirection} aria-label="تبديل لغة الترجمة" title="تبديل لغة الترجمة" className="grid h-9 w-9 place-items-center rounded-full border border-brand-500/30 text-brand-600 transition hover:bg-brand-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"><ArrowLeftRight size={17} /></button>
               <span className={`rounded-full border border-brand-500/50 bg-brand-500/10 px-3 py-1 text-xs font-semibold ${isCompact ? 'text-blue-200' : 'text-brand-700 dark:text-brand-200'}`}>{labels.target}</span>

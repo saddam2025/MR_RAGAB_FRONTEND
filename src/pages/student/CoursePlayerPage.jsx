@@ -8,18 +8,14 @@ export const route = {
 
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate, useParams } from 'react-router-dom';
-import Avatar from '../../components/ui/Avatar';
+import { useParams } from 'react-router-dom';
 import Badge from '../../components/ui/Badge';
-import Button from '../../components/ui/Button';
 import { useAuth } from '../../hooks/useAuth';
 import api, { resolveApiAssetUrl } from '../../services/api';
-import quizService from '../../services/quizService';
 import Translator from '../../features/translator/Translator.jsx';
 
 export default function CoursePlayerPage() {
-  const { instructorId, courseId, lectureId } = useParams();
-  const navigate = useNavigate();
+  const { courseId, lectureId } = useParams();
   const { user } = useAuth();
   const videoRef = useRef(null);
   const playerFrameRef = useRef(null);
@@ -35,8 +31,6 @@ export default function CoursePlayerPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMobileFullscreen, setIsMobileFullscreen] = useState(false);
   const [isPhone, setIsPhone] = useState(false);
-  const [quizSubmission, setQuizSubmission] = useState(null);
-  const [assignment, setAssignment] = useState(null);
 
   useEffect(() => {
     const updateFullscreenState = () => setIsFullscreen(document.fullscreenElement === playerFrameRef.current);
@@ -170,32 +164,10 @@ export default function CoursePlayerPage() {
   const watermark = access?.watermark || { name: user?.name || 'طالب', phone: user?.phone || '' };
   const watermarkText = [watermark.name, watermark.phone].filter(Boolean).join(' • ');
   const fullscreenLabel = isFullscreen || isMobileFullscreen ? 'تصغير الفيديو' : 'تكبير الفيديو';
-  const homeworkUrl = lecture?.homeworkUrl ? resolveApiAssetUrl(lecture.homeworkUrl) : '';
-  const quizId = lecture?.quizId || '';
-
-  useEffect(() => {
-    let active = true;
-    if (!quizId) { setQuizSubmission(null); return () => { active = false; }; }
-    quizService.getMySubmission(quizId)
-      .then((response) => { if (active) setQuizSubmission(response?.data?.data || null); })
-      .catch(() => { if (active) setQuizSubmission(null); });
-    return () => { active = false; };
-  }, [quizId]);
-
-  useEffect(() => {
-    let active = true;
-    api.get(`/courses/${courseId}/lectures/${lectureId}/assignments/mine`)
-      .then((response) => { if (active) setAssignment(response?.data?.data || null); })
-      .catch(() => { if (active) setAssignment(null); });
-    return () => { active = false; };
-  }, [courseId, lectureId]);
   const playerFrame = bunnyEmbedUrl ? <div ref={playerFrameRef} className={`video-player-frame relative aspect-video w-full overflow-hidden rounded-2xl bg-black ring-1 ring-black/40${isMobileFullscreen ? ' video-mobile-fullscreen' : ''}`}>
     <iframe className="h-full w-full" src={bunnyEmbedUrl} title={title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" />
     <div className="video-watermark">{watermarkText}</div>
     <button type="button" className="video-fullscreen-button" onClick={toggleFullscreen}>{fullscreenLabel}</button>
-    {/* This is rendered only for phones and intercepts Bunny's own fullscreen
-        control before it can enter an iframe-only mode without the watermark. */}
-    {isPhone && <button type="button" className="video-mobile-fullscreen-control" onClick={toggleFullscreen} aria-label={fullscreenLabel}>⛶</button>}
   </div> : videoUrl ? <div ref={playerFrameRef} className={`video-player-frame relative w-full overflow-hidden rounded-2xl bg-black ring-1 ring-black/40${isMobileFullscreen ? ' video-mobile-fullscreen' : ''}`}>
     <video
       ref={videoRef}
@@ -237,48 +209,18 @@ export default function CoursePlayerPage() {
   return (
     <div className="min-h-screen bg-surface-canvas text-ink-900" dir="rtl">
       <main className="container mx-auto max-w-5xl px-4 py-6 space-y-5">
-        <section className="rounded-3xl bg-surface-default shadow-card p-5">
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Avatar src={null} name={watermark.name} size="sm" />
-              <div>
-                <h1 className="text-lg font-bold text-ink-900">{title}</h1>
-                <p className="text-xs text-ink-500">{watermark.name}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
+        <section className="min-w-0 rounded-3xl bg-surface-default p-3 text-right shadow-card sm:p-5">
+          <div className="mb-3 flex min-w-0 flex-wrap items-center justify-between gap-2">
+            <h1 className="min-w-0 truncate text-base font-bold text-ink-900">{title}</h1>
+            <div className="flex flex-wrap items-center gap-2">
               {access.viewsRemaining != null && <Badge variant="info" className="text-xs">المشاهدات المتبقية: {access.viewsRemaining}</Badge>}
               {access.daysRemaining != null && <Badge variant="info" className="text-xs">الأيام المتبقية: {access.daysRemaining}</Badge>}
             </div>
           </div>
-
           {renderedPlayer}
-
           {progressError && <p role="alert" className="mt-3 text-sm text-danger-DEFAULT">{progressError}</p>}
         </section>
-
-        <section className="rounded-3xl bg-surface-default shadow-card p-6 text-right">
-          <h2 className="font-display text-2xl font-bold text-ink-900">{title}</h2>
-          {lecture?.description_ar && <p className="mt-2 text-sm leading-relaxed text-ink-600">{lecture.description_ar}</p>}
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
-            <article className="rounded-2xl border border-brand-200 bg-brand-50/50 p-5">
-              <p className="text-sm font-bold text-ink-900">الواجب</p>
-              {homeworkUrl ? <><p className="mt-2 text-sm text-ink-600">تم رفع واجب هذه المحاضرة، ويمكنك عرضه أو تحميله ثم تسليم الحل.</p><div className="mt-4 flex flex-wrap gap-2"><a href={homeworkUrl} target="_blank" rel="noreferrer" download><Button size="sm" variant="ghost">عرض / تحميل الواجب</Button></a><Button size="sm" variant="primary" onClick={() => navigate(assignment ? `/${instructorId}/assignment-grades` : `/${instructorId}/courses/${courseId}/lectures/${lectureId}/assignments`)}>{assignment ? 'شوف درجة الواجب' : 'تسليم الواجب'}</Button></div></> : <p className="mt-2 text-sm text-ink-500">الواجب لسه منزلش.</p>}
-            </article>
-            <article className="rounded-2xl border border-surface-border bg-surface-muted p-5">
-              <p className="text-sm font-bold text-ink-900">الامتحان</p>
-              {quizId ? <><p className="mt-2 text-sm text-ink-600">اختبار المحاضرة جاهز. تأكد من فهم الدرس قبل البدء.</p><Button className="mt-4" size="sm" variant="primary" onClick={() => navigate(quizSubmission ? `/${instructorId}/exam-grades` : `/${instructorId}/courses/${courseId}/quizzes/${quizId}`)}>{quizSubmission ? 'شوف درجتك' : 'بدء الامتحان'}</Button></> : <p className="mt-2 text-sm text-ink-500">الامتحان لسه منزلش.</p>}
-            </article>
-          </div>
-          <div className="mt-6">
-            <Translator variant="compact" />
-          </div>
-          <div className="mt-5">
-            <Button variant="ghost" onClick={() => { window.location.href = 'mailto:support@riyadiaty.example.com'; }}>
-              تواصل مع الدعم
-            </Button>
-          </div>
-        </section>
+        <Translator variant="compact" className="w-full min-w-0" />
       </main>
     </div>
   );
