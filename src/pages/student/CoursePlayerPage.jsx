@@ -8,14 +8,17 @@ export const route = {
 
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Badge from '../../components/ui/Badge';
+import Button from '../../components/ui/Button';
 import { useAuth } from '../../hooks/useAuth';
 import api, { resolveApiAssetUrl } from '../../services/api';
+import quizService from '../../services/quizService';
 import Translator from '../../features/translator/Translator.jsx';
 
 export default function CoursePlayerPage() {
-  const { courseId, lectureId } = useParams();
+  const { instructorId, courseId, lectureId } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const videoRef = useRef(null);
   const playerFrameRef = useRef(null);
@@ -31,6 +34,8 @@ export default function CoursePlayerPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMobileFullscreen, setIsMobileFullscreen] = useState(false);
   const [isPhone, setIsPhone] = useState(false);
+  const [quizSubmission, setQuizSubmission] = useState(null);
+  const [assignment, setAssignment] = useState(null);
 
   useEffect(() => {
     const updateFullscreenState = () => setIsFullscreen(document.fullscreenElement === playerFrameRef.current);
@@ -96,6 +101,26 @@ export default function CoursePlayerPage() {
     };
 
     loadPlayer();
+    return () => { active = false; };
+  }, [courseId, lectureId]);
+
+  const quizId = lecture?.quizId || '';
+  const homeworkUrl = lecture?.homeworkUrl ? resolveApiAssetUrl(lecture.homeworkUrl) : '';
+
+  useEffect(() => {
+    let active = true;
+    if (!quizId) { setQuizSubmission(null); return () => { active = false; }; }
+    quizService.getMySubmission(quizId)
+      .then((response) => { if (active) setQuizSubmission(response?.data?.data || null); })
+      .catch(() => { if (active) setQuizSubmission(null); });
+    return () => { active = false; };
+  }, [quizId]);
+
+  useEffect(() => {
+    let active = true;
+    api.get(`/courses/${courseId}/lectures/${lectureId}/assignments/mine`)
+      .then((response) => { if (active) setAssignment(response?.data?.data || null); })
+      .catch(() => { if (active) setAssignment(null); });
     return () => { active = false; };
   }, [courseId, lectureId]);
 
@@ -219,6 +244,29 @@ export default function CoursePlayerPage() {
           </div>
           {renderedPlayer}
           {progressError && <p role="alert" className="mt-3 text-sm text-danger-DEFAULT">{progressError}</p>}
+        </section>
+        <section aria-label="متطلبات المحاضرة" className="grid min-w-0 gap-3 sm:grid-cols-2">
+          <article className="min-w-0 rounded-3xl border border-brand-200 bg-surface-default p-5 text-right shadow-card">
+            <h2 className="text-base font-bold text-ink-900">الواجب</h2>
+            {homeworkUrl ? (
+              <div className="mt-3 flex flex-wrap gap-2">
+                <a href={homeworkUrl} target="_blank" rel="noreferrer" download>
+                  <Button size="sm" variant="ghost">عرض / تحميل الواجب</Button>
+                </a>
+                <Button size="sm" variant="primary" onClick={() => navigate(assignment ? `/${instructorId}/assignment-grades` : `/${instructorId}/courses/${courseId}/lectures/${lectureId}/assignments`)}>
+                  {assignment ? 'شوف درجة الواجب' : 'تسليم الواجب'}
+                </Button>
+              </div>
+            ) : <p className="mt-2 text-sm text-ink-500">الواجب لسه منزلش.</p>}
+          </article>
+          <article className="min-w-0 rounded-3xl border border-surface-border bg-surface-default p-5 text-right shadow-card">
+            <h2 className="text-base font-bold text-ink-900">الامتحان</h2>
+            {quizId ? (
+              <Button className="mt-3" size="sm" variant="primary" onClick={() => navigate(quizSubmission ? `/${instructorId}/exam-grades` : `/${instructorId}/courses/${courseId}/quizzes/${quizId}`)}>
+                {quizSubmission ? 'شوف درجتك' : 'بدء الامتحان'}
+              </Button>
+            ) : <p className="mt-2 text-sm text-ink-500">الامتحان لسه منزلش.</p>}
+          </article>
         </section>
         <Translator variant="compact" className="w-full min-w-0" />
       </main>
