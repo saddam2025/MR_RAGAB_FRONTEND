@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import ParentSidebar from './ParentSidebar';
 import Navbar from './Navbar';
+import MobileNavigation from './MobileNavigation';
 // FIX: SelectedChildProvider is now mounted globally in App.jsx.
 // Wrapping again here created a second, disconnected instance that reset
 // selectedChildId whenever the user entered/left /parent/* routes.
@@ -29,7 +30,7 @@ export default function ParentLayout() {
       <div className={`flex-1 min-w-0 flex flex-col transition-[margin] duration-200 ${sidebarCollapsed ? 'md:mr-[var(--sidebar-collapsed-width)]' : 'md:mr-72'}`}>
         <Navbar sidebarOpen={mobileSidebarOpen} onToggleSidebar={toggleMobileSidebar} sticky sidebarOffset sidebarCollapsed={sidebarCollapsed} />
 
-        <main className="flex-1 p-6 lg:p-8 animate-fadeIn">
+        <main className="has-mobile-navigation flex-1 p-6 lg:p-8 animate-fadeIn">
           <Outlet />
         </main>
       </div>
@@ -42,6 +43,7 @@ export default function ParentLayout() {
           </aside>
         </div>
       ) : null}
+      <MobileNavigation />
     </div>
   );
 }

@@ -23,7 +23,7 @@ export default function Layouts() {
   const isTenantLoginPage = Boolean(useMatch({ path: '/:instructorId/login', end: true }));
   const isTenantRegisterPage = Boolean(useMatch({ path: '/:instructorId/register', end: true }));
   const isTenantAuthPage = isTenantLoginPage || isTenantRegisterPage;
-  const showMobileNavigation = showSidebar && user?.role === 'student' && !isTenantAuthPage;
+  const showMobileNavigation = showSidebar && ['student', 'assistant', 'admin', 'teacher'].includes(user?.role) && !isTenantAuthPage;
   const toggleMobileSidebar = () => setMobileSidebarOpen((open) => !open);
   useEffect(() => { setMobileSidebarOpen(false); }, [location.pathname]);
   useEffect(() => {

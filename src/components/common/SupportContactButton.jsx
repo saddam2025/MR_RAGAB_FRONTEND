@@ -28,8 +28,9 @@ export default function SupportContactButton() {
   }, [instructorId, isTenantRoute]);
 
   const href = egyptianWhatsappUrl(supportPhone);
+  const hasMobileNavigation = ['student', 'assistant', 'admin', 'teacher', 'parent', 'super_admin'].includes(user?.role);
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" aria-label="تواصل مع الدعم الفني عبر واتساب" title="تواصل مع الدعم الفني" className={`support-contact-button${user?.role === 'student' ? ' support-contact-button--above-mobile-navigation' : ''}`}>
+    <a href={href} target="_blank" rel="noopener noreferrer" aria-label="تواصل مع الدعم الفني عبر واتساب" title="تواصل مع الدعم الفني" className={`support-contact-button${hasMobileNavigation ? ' support-contact-button--above-mobile-navigation' : ''}`}>
       <img src="/assets/support-floating.png" alt="" draggable="false" className="h-full w-full select-none object-cover" />
     </a>
   );

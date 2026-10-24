@@ -349,8 +349,10 @@ html.dark .min-h-screen.bg-surface-canvas:not(.dot-grid-background *) {
   background-image: none;
 }
 
-.has-mobile-navigation {
-  padding-bottom: calc(var(--mobile-navigation-height) + env(safe-area-inset-bottom, 0px) + 1rem);
+@media (max-width: 767px) {
+  .has-mobile-navigation {
+    padding-bottom: calc(var(--mobile-navigation-height) + env(safe-area-inset-bottom, 0px) + 1rem);
+  }
 }
 
 .mobile-navigation {

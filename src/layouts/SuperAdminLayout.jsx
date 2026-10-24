@@ -4,6 +4,7 @@ import { Building2, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Menu, Pl
 import { useAuth } from '../hooks/useAuth';
 import ThemeToggle from '../components/ui/ThemeToggle';
 import Logo from '../components/common/Logo';
+import MobileNavigation from './MobileNavigation';
 
 const navItems = [
   { to: '/super-admin', label: 'نظرة عامة', icon: LayoutDashboard, end: true },
@@ -80,9 +81,10 @@ export default function SuperAdminLayout() {
           {side(true)}
         </aside>
       </div>}
-      <main className={`p-4 sm:p-6 lg:p-8 transition-[margin] duration-200 ${collapsed ? 'md:mr-[var(--sidebar-collapsed-width)]' : 'md:mr-72'}`}>
+      <main className={`has-mobile-navigation p-4 sm:p-6 lg:p-8 transition-[margin] duration-200 ${collapsed ? 'md:mr-[var(--sidebar-collapsed-width)]' : 'md:mr-72'}`}>
         <Outlet />
       </main>
+      <MobileNavigation />
     </div>
   );
 }
