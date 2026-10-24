@@ -30,6 +30,7 @@ module.exports = {
         surface: {
           canvas: 'var(--surface-canvas)',
           DEFAULT: 'var(--surface-default)',
+          default: 'var(--surface-default)',
           muted: 'var(--surface-muted)',
           border: 'var(--surface-border)'
         },

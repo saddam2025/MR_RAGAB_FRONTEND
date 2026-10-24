@@ -15,6 +15,7 @@ import ScrollToTop from './components/common/ScrollToTop';
 import { Toaster } from 'react-hot-toast';
 import SupportContactButton from './components/common/SupportContactButton';
 import LoadingScreen from './components/common/LoadingScreen';
+import PwaInstallPrompt from './components/common/PwaInstallPrompt';
 
 function RouteGuard({ route, children }) {
   const { user, loading } = useAuth();
@@ -70,6 +71,26 @@ function RouteGuard({ route, children }) {
 export default function App() {
   const [routes, setRoutes] = useState([]);
   const [routesLoading, setRoutesLoading] = useState(true);
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [appInstalled, setAppInstalled] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      setInstallPrompt(event);
+    };
+    const handleAppInstalled = () => {
+      setAppInstalled(true);
+      setInstallPrompt(null);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -180,6 +201,12 @@ export default function App() {
                 </Routes>
                 <Toaster position="top-center" />
                 <SupportContactButton />
+                <PwaInstallPrompt
+                  installPrompt={installPrompt}
+                  appInstalled={appInstalled}
+                  onInstallPromptConsumed={() => setInstallPrompt(null)}
+                  routes={routes}
+                />
               </Suspense>
 
             </ThemeProvider>

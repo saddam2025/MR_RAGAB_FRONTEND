@@ -255,7 +255,7 @@ section.bg-surface-default.shadow-card > div.space-y-2 > article > div:last-chil
    light mode, so explicitly map those surfaces back to the shared tokens
    when the global theme switches to dark. */
 html.dark .landing-page {
-  background: var(--surface-canvas) !important;
+  background-color: var(--surface-canvas) !important;
   color: var(--ink-900);
 }
 html.dark .landing-page .landing-light-section,
@@ -328,6 +328,150 @@ html.dark .landing-page .landing-dark-section article [class*="text-[#"] {
   background-image: radial-gradient(currentColor 1px, transparent 1px);
   background-size: 14px 14px;
   color: rgba(var(--ink-900-rgb, 0 0 0) / 0.04);
+}
+
+/* One dotted background per page shell. Nested full-page wrappers reveal the
+   shell instead of painting a second, slightly offset copy of the pattern. */
+.dot-grid-background,
+.min-h-screen.bg-surface-canvas:not(.dot-grid-background *) {
+  background-image: radial-gradient(circle, rgb(37 91 177 / 12%) 1.2px, transparent 1.35px);
+  background-size: 30px 30px;
+  background-position: 1px 1px;
+}
+
+html.dark .dot-grid-background,
+html.dark .min-h-screen.bg-surface-canvas:not(.dot-grid-background *) {
+  background-image: radial-gradient(circle, rgb(191 216 255 / 12%) 1.2px, transparent 1.35px);
+}
+
+.dot-grid-background .min-h-screen.bg-surface-canvas {
+  background-color: transparent;
+  background-image: none;
+}
+
+.has-mobile-navigation {
+  padding-bottom: calc(var(--mobile-navigation-height) + env(safe-area-inset-bottom, 0px) + 1rem);
+}
+
+.mobile-navigation {
+  box-sizing: border-box;
+  height: calc(var(--mobile-navigation-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.mobile-navigation a {
+  min-height: 48px;
+}
+
+.support-contact-button {
+  position: fixed;
+  z-index: 35;
+  bottom: 1rem;
+  left: 1rem;
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: var(--surface-default);
+  box-shadow: 0 10px 24px rgb(15 35 65 / 16%);
+  outline: 1px solid var(--surface-border);
+  transition: transform 180ms ease;
+}
+
+.support-contact-button:hover { transform: scale(1.05); }
+.support-contact-button:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand-500) 45%, transparent); outline-offset: 2px; }
+.support-contact-button img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 767px) {
+  .support-contact-button {
+    bottom: 1rem;
+    left: max(12px, env(safe-area-inset-left, 0px) + 8px);
+    width: 48px;
+    height: 48px;
+  }
+
+  .support-contact-button--above-mobile-navigation {
+    bottom: calc(var(--mobile-navigation-height) + env(safe-area-inset-bottom, 0px) + 12px);
+  }
+}
+
+.sidebar-collapsed {
+  padding: 1rem .375rem;
+}
+
+.sidebar-collapsed .sidebar-brand {
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding-inline: 0;
+}
+
+.sidebar-collapsed .sidebar-profile,
+.sidebar-collapsed .sidebar-instructors,
+.sidebar-collapsed .sidebar-brand-label,
+.sidebar-collapsed .sidebar-nav-label,
+.sidebar-collapsed .sidebar-nav-section-label {
+  display: none;
+}
+
+.sidebar-collapsed .sidebar-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.sidebar-collapsed .sidebar-navigation > :not([hidden]) ~ :not([hidden]),
+.sidebar-collapsed .sidebar-nav-section .space-y-2 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0;
+}
+
+.sidebar-collapsed .sidebar-nav-section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sidebar-collapsed .sidebar-nav-item {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: .25rem;
+  border-radius: .875rem;
+}
+
+.sidebar-collapsed .sidebar-nav-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  background: transparent;
+}
+
+.sidebar-collapsed .sidebar-nav-item-active {
+  background-color: transparent;
+  border-radius: .875rem;
+  color: white;
+}
+
+.sidebar-collapsed .sidebar-nav-item-active .sidebar-nav-icon {
+  width: 56px;
+  height: 56px;
+  flex-basis: 56px;
+  border-radius: 9999px;
+  background: #fff;
+  color: var(--sidebar-bg);
+}
+
+.sidebar-collapsed .sidebar-footer {
+  border-top: 0;
+  padding-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .support-contact-button { transition: none; }
 }
 
 @media (max-width: 1024px) {

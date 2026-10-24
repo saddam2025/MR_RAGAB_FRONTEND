@@ -121,7 +121,7 @@ export default function InstructorSelectorPage() {
   };
 
   return (
-    <div className="landing-page min-h-screen overflow-x-hidden bg-[#f5f9ff] text-[#102650]" dir="rtl">
+    <div className="landing-page dot-grid-background min-h-screen overflow-x-hidden bg-[#f5f9ff] text-[#102650]" dir="rtl">
       <div className="bg-[#0c254a] px-3 pb-14 sm:px-6 lg:px-10">
         <Navbar sticky />
         <section className="mx-auto max-w-7xl px-3 pb-6 pt-10 lg:px-8 lg:pb-14 lg:pt-14">

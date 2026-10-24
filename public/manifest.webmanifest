@@ -1,0 +1,27 @@
+{
+  "id": "/",
+  "name": "Mr Ragab Seddik",
+  "short_name": "Mr Ragab",
+  "description": "منصة مستر رجب صديق لتعليم اللغة الإنجليزية",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f8fd",
+  "theme_color": "#1677e8",
+  "icons": [
+    {
+      "src": "/assets/brand/ragab-app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/brand/ragab-app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

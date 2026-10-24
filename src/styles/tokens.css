@@ -7,6 +7,8 @@
   --radius-sm: 10px; --radius-md: 16px; --radius-lg: 22px; --radius-xl: 28px;
   --shadow-card: 0 8px 24px rgba(25, 54, 97, .07); --shadow-soft: 0 16px 35px rgba(25, 54, 97, .1); --shadow-panel: 0 24px 70px rgba(16, 43, 89, .17); --shadow-pop: 0 10px 20px -8px rgba(22, 119, 232, .65); --shadow-glow: 0 13px 30px -10px rgba(22, 119, 232, .55);
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --sidebar-collapsed-width: 76px;
+  --mobile-navigation-height: 72px;
 }
 html.dark {
   --ink-900: #f4f8ff; --ink-800: #dce8fa; --ink-700: #b4c4db; --ink-600: #91a5c1; --ink-500: #7286a3; --ink-400: #566b88; --ink-300: #3c506d; --ink-200: #2b3d58; --ink-100: #1d2c45; --ink-50: #142238;
